@@ -15,17 +15,36 @@ def get_urls_from_csv(csv_file,
                       news_column_name='NewsNotNews'):
     """
     Return a list of image paths, given a csv file
-
+r r nvn
     :param csv_file: Path to csv file to get paths from
     :param url_column_name: Name of column containing urls
     :param news_column_name: Name of column name containing relevance data
     :return dict in format {'url':url, 'relevant':bool, 'count':int}
     """
+    results = []
     if not os.path.exists(csv_file):
         raise OSError('Input file %s does not exist' % csv_file)
     with open(csv_file, 'r') as f:
-        pass
+        reader = csv.DictReader(f)
+        for row in reader:
+            # Check for an existing result for this url
+            url_already_found = False
+            for result in results:
+                if result['url'] == row[url_column_name]:
+                    current_count = result['count']
+                    result['count'] = current_count + 1
+                    url_already_found = True
 
+            if not url_already_found:
+                new_url = {}
+                new_url['url'] = row[url_column_name]
+                new_url['count'] = 1
+                if row[news_column_name].lower() == 'news':
+                    new_url['relevant'] = True
+                else:
+                    new_url['relevant'] = False
+                results.append(new_url)
+    return results
 
 
 def main():

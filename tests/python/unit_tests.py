@@ -22,5 +22,10 @@ class InputTest(GeneralTest):
         for e in expected:
             self.assertIn(e, response)
 
+    def test_wrong_key_raises_error(self):
+        with self.assertRaises(KeyError):
+            main.get_urls_from_csv(self.test_csv_in, 'bumbag')
+
+
 if __name__ == '__main__':
      unittest.main()
