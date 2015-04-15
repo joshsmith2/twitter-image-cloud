@@ -17,6 +17,8 @@ class GeneralTest(unittest.TestCase):
         self.base_dir = os.path.dirname(os.path.dirname(self.current_dir))
         self.script = os.path.join(self.base_dir, 'main.py')
         self.minimal_command = [self.script, '-h']
+        self.files = os.path.join(self.base_dir, 'files')
+        self.test_csv_in = os.path.join(self.files, 'test_csv_in.csv')
 
     def tearDown(self):
         pass

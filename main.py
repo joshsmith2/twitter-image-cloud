@@ -1,12 +1,27 @@
 #!/usr/bin/env python3
 
 import argparse
+import csv
 
 def get_arguments():
     p = argparse.ArgumentParser()
     p.add_argument('-i', '--input-csv', metavar='PATH', dest='input_csv',
                    help='CSV file containing urls to images')
     return p.parse_args()
+
+def get_urls_from_csv(csv_file,
+                      url_column_name='media_urls',
+                      news_column_name='NewsNotNews'):
+    """
+    Return a list of image paths, given a csv file
+
+    :param csv_file: Path to csv file to get paths from
+    :param url_column_name: Name of column containing urls
+    :param news_column_name: Name of column name containing relevance data
+    :return dict in format {'url':url, 'relevant':bool, 'count':int}
+    """
+    return []
+
 
 def main():
     get_arguments()
