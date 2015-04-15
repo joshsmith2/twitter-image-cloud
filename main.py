@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import os
 import argparse
 import csv
 
@@ -20,7 +21,11 @@ def get_urls_from_csv(csv_file,
     :param news_column_name: Name of column name containing relevance data
     :return dict in format {'url':url, 'relevant':bool, 'count':int}
     """
-    return []
+    if not os.path.exists(csv_file):
+        raise OSError('Input file %s does not exist' % csv_file)
+    with open(csv_file, 'r') as f:
+        pass
+
 
 
 def main():
