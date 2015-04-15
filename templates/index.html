@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta lang="en">
+    <script src="js/masonry.pkgd.min.js"></script>
 </head>
 <body>
     <div class="masonry">
@@ -11,5 +12,13 @@
         </div>
     {% endfor %}
     </div>
+
+    <script type="text/javascript">
+        docReady( function() {
+            var container = document.querySelector('.masonry');
+            var msnry = new Masonry( container );
+            msnry.layout();
+        })
+    </script>
 </body>
 </html>

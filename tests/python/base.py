@@ -19,7 +19,7 @@ class GeneralTest(unittest.TestCase):
         self.minimal_command = [self.script, '-h']
         self.files = os.path.join(self.current_dir, 'files')
         self.test_csv_in = os.path.join(self.files, 'twitter_sample.csv')
-        self.test_index = os.path.join(self.files, 'index.html')
+        self.test_index = os.path.join(self.base_dir, 'index.html')
 
         if os.path.exists(self.test_index):
             os.remove(self.test_index)
