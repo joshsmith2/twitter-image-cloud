@@ -47,7 +47,8 @@ class ImageTests(GeneralTest):
         urls = main.get_urls_from_csv(self.test_csv_in)
         index_template = main.load_template()
         rendered = index_template.render(twitter_images=urls)
-        self.assertIn(rendered)
+        tag = '<img src="http://pbs.twimg.com/media/B51oL3fIcAA9j9L.png">'
+        self.assertIn(tag, rendered)
 
 if __name__ == '__main__':
      unittest.main()
