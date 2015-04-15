@@ -1,5 +1,6 @@
 import unittest
 import os
+import subprocess as sp
 try:
     import main
 except ImportError:
@@ -13,6 +14,9 @@ class GeneralTest(unittest.TestCase):
 
     def setUp(self):
         self.current_dir = os.path.dirname(os.path.abspath(__file__))
+        self.base_dir = os.path.dirname(os.path.dirname(self.current_dir))
+        self.script = os.path.join(self.base_dir, 'main.py')
+        self.minimal_command = [self.script, '-h']
 
     def tearDown(self):
         pass
