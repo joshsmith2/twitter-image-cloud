@@ -3,6 +3,15 @@
 import os
 import argparse
 import csv
+import jinja2
+
+SOURCE_ROOT = os.path.dirname(os.path.realpath(__file__))
+
+def load_template(template_name='index.html'):
+    template_dir = os.path.join(SOURCE_ROOT, 'templates')
+    loader = jinja2.FileSystemLoader(searchpath=template_dir)
+    env = jinja2.Environment(loader=loader)
+    return env.get_template(template_name)
 
 def get_arguments():
     p = argparse.ArgumentParser()
@@ -15,7 +24,7 @@ def get_urls_from_csv(csv_file,
                       news_column_name='NewsNotNews'):
     """
     Return a list of image paths, given a csv file
-r r nvn
+
     :param csv_file: Path to csv file to get paths from
     :param url_column_name: Name of column containing urls
     :param news_column_name: Name of column name containing relevance data

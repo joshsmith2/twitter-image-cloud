@@ -1,4 +1,5 @@
 from base import *
+import jinja2
 
 class InputTest(GeneralTest):
 
@@ -26,6 +27,27 @@ class InputTest(GeneralTest):
         with self.assertRaises(KeyError):
             main.get_urls_from_csv(self.test_csv_in, 'bumbag')
 
+class JinjaTests(GeneralTest):
+
+    def test_can_render_test_template(self):
+        test_template = main.load_template('test.html')
+        rendered = test_template.render(worked_goes_here = 'worked')
+        self.assertIn("<h1>This has worked</h1>", rendered)
+
+    def test_can_render_loops(self):
+        loop_template = main.load_template('loop_test.html')
+        felonies = ['pig', 'hog', 'brine']
+        rendered = loop_template.render(book=felonies)
+        for crime in felonies:
+            self.assertIn('<h1>I got %s felonies</h1>' % crime, rendered)
+
+class ImageTests(GeneralTest):
+
+    def test_images_end_up_on_the_page(self):
+        urls = main.get_urls_from_csv(self.test_csv_in)
+        index_template = main.load_template()
+        rendered = index_template.render(twitter_images=urls)
+        self.assertIn(rendered)
 
 if __name__ == '__main__':
      unittest.main()

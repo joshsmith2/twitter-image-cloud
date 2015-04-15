@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta lang="en">
+</head>
+<body>
+    <div class="masonry">
+    {% for twitter_image in twitter_images %}
+        <div class="masonry-item">
+            <img src="{{ twitter_image.url }}">
+        </div>
+    {% endfor %}
+    </div>
+</body>
+</html>
