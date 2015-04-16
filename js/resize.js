@@ -35,14 +35,26 @@ $(function() {
 
 $(document).ready(function(){
     ResizeModule.resize_divs();
-
+    /*
     var container = document.querySelector('.masonry');
+
+    //Masonry
     var msnry = new Masonry( container, {
         itemSelector: ".masonry-item"
     });
     imagesLoaded( container, function() {
         msnry.layout();
     });
+    */
+
+    var container = document.querySelector('#container');
+    var pckry = new Packery( container, {
+      // options
+      itemSelector: '.masonry-item'
+    });
+    imagesLoaded( container, function() {
+        pckry.layout();
+    })
 
 
 });

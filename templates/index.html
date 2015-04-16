@@ -5,11 +5,12 @@
     <link type="text/css" rel="stylesheet" href="css/main.css">
     <script type="text/javascript" src="js/masonry.pkgd.min.js"></script>
     <script type="text/javascript" src="js/imagesloaded.pkgd.min.js"></script>
+    <script type="text/javascript" src="js/packery.pkgd.min.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script type="text/javascript" src="js/resize.js"></script>
 </head>
 <body>
-    <div class="masonry">
+    <div id="container">
     {% for twitter_image in twitter_images %}
         <div id="item{{ loop.index }}" class="masonry-item">
             <img src="{{ twitter_image.url }}">
