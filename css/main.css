@@ -6,6 +6,10 @@
 .masonry_item{
 }
 
+img{
+    width: 100%;
+}
+
 .count{
     display: none;
 }

@@ -3,9 +3,6 @@
     script as a seperate element)
  */
 
-//Declare functions in global scope, for testing
-
-
 window.ResizeModule = {};
 
 $(function() {
@@ -21,20 +18,29 @@ $(function() {
         return Math.max.apply(Math,counts);
     };
 
-
-
-    var get_widths = function(){
-        var widths = [];
-        $( 'img' ).each(function(){
-            widths[widths.length] = $( this ).width();
+    var resize_divs = function(){
+        var max_count = get_max_count();
+        var max_width = 600;
+        $('.masonry-item').each(function(){
+            var count = $( this ).children('.count').text();
+            var new_width = Math.round((count / max_count) * max_width);
+            $(this).width(new_width);
         });
-        return widths;
     };
 
     // Return functions for use in unit tests
-    ResizeModule.get_widths = get_widths;
+    ResizeModule.resize_divs = resize_divs;
     ResizeModule.get_max_count = get_max_count;
 });
 
 $(document).ready(function(){
+    ResizeModule.resize_divs();
+
+    // Masonry
+    var container = document.querySelector('.masonry');
+    var msnry = new Masonry( container, {
+        itemSelector: ".masonry-item"
+    });
+    msnry.layout();
+
 });
