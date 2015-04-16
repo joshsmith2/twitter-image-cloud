@@ -98,7 +98,8 @@
 
         $(test("Everything loadable", function () {
             ok(ResizeModule, "Resize module loaded");
-            ok(ResizeModule.get_widths, "Function can be loaded");
+            ok(ResizeModule.get_widths, "get_widths can be loaded");
+            ok(ResizeModule.get_max_count, "get_max_count can be loaded")
         }));
 
         $(test("get_widths() returns correct values", function ( assert ) {
@@ -108,6 +109,11 @@
             assert.deepEqual(widths, expected);
         }));
 
+        $(test("get_max_count()", function(assert){
+            var expected = 4;
+            var result = ResizeModule.get_max_count();
+            assert.equal(expected, result)
+        }));
 
     </script>
 
