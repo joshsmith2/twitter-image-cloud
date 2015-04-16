@@ -26,6 +26,7 @@ def get_arguments():
     p = argparse.ArgumentParser()
     p.add_argument('-i', '--input-csv', metavar='PATH', dest='input_csv',
                    help='CSV file containing urls to images')
+    p.add_argument('-o' '--output-file', metavar='PATH', dest='output_file')
     return p.parse_args()
 
 def get_urls_from_csv(csv_file,

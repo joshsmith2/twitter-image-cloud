@@ -11,5 +11,10 @@ class FunctionalTest(GeneralTest):
         main.print_index(self.test_csv_in, self.test_index)
         self.assertTrue(os.path.exists(self.test_index))
 
+    def test_command_line(self):
+        sp.check_call([self.script,
+                       '-i', self.test_csv_in,
+                       '-o', self.])
+
 if __name__ == '__main__':
      unittest.main()

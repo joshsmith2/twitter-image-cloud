@@ -36,11 +36,13 @@ $(function() {
 $(document).ready(function(){
     ResizeModule.resize_divs();
 
-    // Masonry
     var container = document.querySelector('.masonry');
     var msnry = new Masonry( container, {
         itemSelector: ".masonry-item"
     });
-    msnry.layout();
+    imagesLoaded( container, function() {
+        msnry.layout();
+    });
+
 
 });
