@@ -8,9 +8,9 @@ import jinja2
 SOURCE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 
-def print_index(input_file, output_file='index.html'):
+def print_index(input_file, output_file='index.html', template='index.html'):
     urls = get_urls_from_csv(input_file)
-    template = load_template()
+    template = load_template(template)
     rendered = template.render(twitter_images=urls)
     with open(output_file, 'w') as f:
         f.write(rendered)

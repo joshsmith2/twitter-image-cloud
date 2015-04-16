@@ -8,7 +8,6 @@ class FunctionalTest(GeneralTest):
         self.assertIn(message, output)
 
     def test_whole_process(self):
-        output = os.path.join(self.files, 'index.html')
         main.print_index(self.test_csv_in, self.test_index)
         self.assertTrue(os.path.exists(self.test_index))
 

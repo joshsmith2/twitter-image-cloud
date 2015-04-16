@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta lang="en">
+    <title>Javascript tests</title>
+    <link type="text/css" rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="qunit-1.18.0.css">
+    <script src="../../js/masonry.pkgd.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="../../js/resize.js"></script>
+</head>
+<body>
+
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+
+    <div class="masonry">
+    
+        <div class="masonry-item">
+            <img src="http://pbs.twimg.com/media/A4nysuNCQAERXAW.jpg">
+            <div class="count">1</div>
+        </div>
+    
+        <div class="masonry-item">
+            <img src="http://pbs.twimg.com/media/AhCjxLyCQAAZ7Ug.jpg">
+            <div class="count">1</div>
+        </div>
+    
+        <div class="masonry-item">
+            <img src="http://pbs.twimg.com/media/Ajxb2c6CQAAzQTg.jpg">
+            <div class="count">1</div>
+        </div>
+    
+        <div class="masonry-item">
+            <img src="http://pbs.twimg.com/media/AoxQ3CECIAAsArF.jpg">
+            <div class="count">1</div>
+        </div>
+    
+        <div class="masonry-item">
+            <img src="http://pbs.twimg.com/media/B05WaEVIQAA9JMu.jpg">
+            <div class="count">1</div>
+        </div>
+    
+        <div class="masonry-item">
+            <img src="http://pbs.twimg.com/media/B0nPH21IIAAeHiw.jpg">
+            <div class="count">1</div>
+        </div>
+    
+        <div class="masonry-item">
+            <img src="http://pbs.twimg.com/media/B0vMX4nCQAEK63o.jpg">
+            <div class="count">4</div>
+        </div>
+    
+        <div class="masonry-item">
+            <img src="http://pbs.twimg.com/media/B2phtptIMAE0rge.jpg">
+            <div class="count">1</div>
+        </div>
+    
+        <div class="masonry-item">
+            <img src="http://pbs.twimg.com/media/B2PlfAkCUAE0886.png">
+            <div class="count">1</div>
+        </div>
+    
+        <div class="masonry-item">
+            <img src="http://pbs.twimg.com/media/B4boCpyCEAExIYo.jpg">
+            <div class="count">4</div>
+        </div>
+    
+        <div class="masonry-item">
+            <img src="http://pbs.twimg.com/media/B51ijpPCUAEbBeE.jpg">
+            <div class="count">1</div>
+        </div>
+    
+        <div class="masonry-item">
+            <img src="http://pbs.twimg.com/media/B51l7U3IUAAr9-E.jpg">
+            <div class="count">1</div>
+        </div>
+    
+        <div class="masonry-item">
+            <img src="http://pbs.twimg.com/media/B51oL3fIcAA9j9L.png">
+            <div class="count">2</div>
+        </div>
+    
+    </div>
+
+    <script type="text/javascript">
+        docReady( function() {
+            var container = document.querySelector('.masonry');
+            var msnry = new Masonry( container, {
+                itemSelector: ".masonry-item"
+            });
+            msnry.layout();
+        })
+    </script>
+
+    <script src="qunit-1.18.0.js"></script>
+    <script>
+        /*global $, test, equal */
+        test("smoke test", function () {
+            equal(1, 1, "Maths works!");
+        });
+
+    </script>
+
+</body>
+</html>
