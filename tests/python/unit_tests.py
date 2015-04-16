@@ -1,5 +1,5 @@
 from base import *
-import jinja2
+import re
 
 class InputTest(GeneralTest):
 
@@ -49,6 +49,15 @@ class ImageTests(GeneralTest):
         rendered = index_template.render(twitter_images=urls)
         tag = '<img src="http://pbs.twimg.com/media/B51oL3fIcAA9j9L.png">'
         self.assertIn(tag, rendered)
+
+    def test_counts_get_there_too(self):
+        urls = main.get_urls_from_csv(self.test_csv_in)
+        index_template = main.load_template()
+        rendered = index_template.render(twitter_images=urls)
+        tag = '<img src="http://pbs.twimg.com/media/B4boCpyCEAExIYo.jpg">\n' \
+              ' <div class="count">4</div>'
+        rendered_stripped = re.sub(r' +', ' ', rendered)
+        self.assertIn(tag, rendered_stripped)
 
 if __name__ == '__main__':
      unittest.main()

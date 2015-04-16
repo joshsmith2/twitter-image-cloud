@@ -4,4 +4,10 @@
 }
 
 .masonry_item{
+    position: relative;
+}
+
+.count{
+    display: none;
+    position: absolute;
 }
