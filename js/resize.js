@@ -5,24 +5,21 @@
 
 //Declare functions in global scope, for testing
 
-var ResizeModule = function($) {
 
-    var test_brunion = "me";
+window.ResizeModule = {};
 
-    function get_widths(){
+$(function() {
+
+    var get_widths = function(){
         var widths = [];
-        $( img ).each(function(){
+        $( 'img' ).each(function(){
             widths[widths.length] = $( this ).width();
         });
         return widths;
-    }
+    };
 
-    return {
-        test_brunion: test_brunion,
-        get_widths: get_widths
-    }
-};
+    ResizeModule.get_widths = get_widths
+});
 
 $(document).ready(function(){
-
 });

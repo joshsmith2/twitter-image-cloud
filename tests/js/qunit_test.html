@@ -96,12 +96,16 @@
     <script src="qunit-1.18.0.js"></script>
     <script>
 
-        $(test("get_widths()", function ( assert ) {
-            module = ResizeModule();
+        $(test("Everything loadable", function () {
             ok(ResizeModule, "Resize module loaded");
-            ok(module.test_brunion, "Var can be loaded");
-            ok(module.get_widths, "Function can be loaded")
+            ok(ResizeModule.get_widths, "Function can be loaded");
         }));
+
+        $(test("get_widths() returns correct values", function ( assert ) {
+            var widths = ResizeModule.get_widths();
+            console.log(widths);
+        }));
+
 
     </script>
 
