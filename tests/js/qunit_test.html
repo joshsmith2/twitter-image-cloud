@@ -103,7 +103,9 @@
 
         $(test("get_widths() returns correct values", function ( assert ) {
             var widths = ResizeModule.get_widths();
-            console.log(widths);
+            var expected = [600, 600, 600, 600, 350, 599, 404, 600, 504, 547,
+                            600, 387, 600];
+            assert.deepEqual(widths, expected);
         }));
 
 
