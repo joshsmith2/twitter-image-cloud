@@ -10,6 +10,10 @@ window.ResizeModule = {};
 
 $(function() {
 
+    var get_counts = function(){
+    };
+
+
     var get_widths = function(){
         var widths = [];
         $( 'img' ).each(function(){

@@ -59,5 +59,15 @@ class ImageTests(GeneralTest):
         rendered_stripped = re.sub(r' +', ' ', rendered)
         self.assertIn(tag, rendered_stripped)
 
+    def test_items_are_idd_incrementally(self):
+        urls = main.get_urls_from_csv(self.test_csv_in)
+        index_template = main.load_template()
+        rendered = index_template.render(twitter_images=urls)
+        tag = '<div id="item3" class="masonry-item">\n ' \
+              '<img src="http://pbs.twimg.com/media/Ajxb2c6CQAAzQTg.jpg">\n '\
+              '<div class="count">1</div>'
+        rendered_stripped = re.sub(r' +', ' ', rendered)
+        self.assertIn(tag, rendered_stripped)
+
 if __name__ == '__main__':
      unittest.main()
