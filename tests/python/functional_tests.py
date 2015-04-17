@@ -8,13 +8,9 @@ class FunctionalTest(GeneralTest):
         self.assertIn(message, output)
 
     def test_whole_process(self):
-        main.print_index(self.test_csv_in, self.test_index)
+        main.print_index(self.test_csv_in, self.test_index,
+                         url_media_column='media_urls' )
         self.assertTrue(os.path.exists(self.test_index))
-
-    def test_command_line(self):
-        sp.check_call([self.script,
-                       '-i', self.test_csv_in,
-                       '-o', self.])
 
 if __name__ == '__main__':
      unittest.main()

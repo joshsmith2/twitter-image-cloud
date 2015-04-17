@@ -1,8 +1,13 @@
-.masonry{
-    margin: auto
+body{
+    background-color: #000;
 }
 
-.masonry_item{
+.masonry{
+    margin: auto;
+}
+
+.masonry-item{
+    padding-bottom: 0;
 }
 
 img{

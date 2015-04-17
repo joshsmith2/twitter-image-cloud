@@ -10,22 +10,15 @@ class InputTest(GeneralTest):
             main.get_urls_from_csv(silly_path)
 
     def test_can_get_urls_from_csv_file(self):
-        response = main.get_urls_from_csv(self.test_csv_in)
+        response = main.get_urls_from_csv(self.test_csv_in, 'media_urls')
         expected = [{'url': 'http://pbs.twimg.com/media/AoxQ3CECIAAsArF.jpg',
-                     'relevant': False,
                      'count': 1},
                     {'url': 'http://pbs.twimg.com/media/B2PlfAkCUAE0886.png',
-                     'relevant': True,
                      'count': 1},
                     {'url': 'http://pbs.twimg.com/media/B4boCpyCEAExIYo.jpg',
-                     'relevant': True,
                      'count': 4}]
         for e in expected:
             self.assertIn(e, response)
-
-    def test_wrong_key_raises_error(self):
-        with self.assertRaises(KeyError):
-            main.get_urls_from_csv(self.test_csv_in, 'bumbag')
 
 class JinjaTests(GeneralTest):
 
@@ -44,14 +37,14 @@ class JinjaTests(GeneralTest):
 class ImageTests(GeneralTest):
 
     def test_images_end_up_on_the_page(self):
-        urls = main.get_urls_from_csv(self.test_csv_in)
+        urls = main.get_urls_from_csv(self.test_csv_in, 'media_urls')
         index_template = main.load_template()
         rendered = index_template.render(twitter_images=urls)
         tag = '<img src="http://pbs.twimg.com/media/B51oL3fIcAA9j9L.png">'
         self.assertIn(tag, rendered)
 
     def test_counts_get_there_too(self):
-        urls = main.get_urls_from_csv(self.test_csv_in)
+        urls = main.get_urls_from_csv(self.test_csv_in, 'media_urls')
         index_template = main.load_template()
         rendered = index_template.render(twitter_images=urls)
         tag = '<img src="http://pbs.twimg.com/media/B4boCpyCEAExIYo.jpg">\n' \
@@ -60,7 +53,7 @@ class ImageTests(GeneralTest):
         self.assertIn(tag, rendered_stripped)
 
     def test_items_are_idd_incrementally(self):
-        urls = main.get_urls_from_csv(self.test_csv_in)
+        urls = main.get_urls_from_csv(self.test_csv_in, 'media_urls')
         index_template = main.load_template()
         rendered = index_template.render(twitter_images=urls)
         tag = '<div id="item3" class="masonry-item">\n ' \

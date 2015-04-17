@@ -20,10 +20,10 @@ $(function() {
 
     var resize_divs = function(){
         var max_count = get_max_count();
-        var max_width = 600;
+        var max_width = 300;
         $('.masonry-item').each(function(){
             var count = $( this ).children('.count').text();
-            var new_width = Math.round((count / max_count) * max_width);
+            var new_width = Math.round(((count / max_count) * max_width) + 40);
             $(this).width(new_width);
         });
     };
@@ -35,22 +35,13 @@ $(function() {
 
 $(document).ready(function(){
     ResizeModule.resize_divs();
-    /*
-    var container = document.querySelector('.masonry');
-
-    //Masonry
-    var msnry = new Masonry( container, {
-        itemSelector: ".masonry-item"
-    });
-    imagesLoaded( container, function() {
-        msnry.layout();
-    });
-    */
-
     var container = document.querySelector('#container');
+
+    // Packery
     var pckry = new Packery( container, {
       // options
-      itemSelector: '.masonry-item'
+        itemSelector: '.masonry-item',
+        gutter: 3
     });
     imagesLoaded( container, function() {
         pckry.layout();

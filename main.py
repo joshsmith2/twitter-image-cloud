@@ -8,8 +8,9 @@ import jinja2
 SOURCE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 
-def print_index(input_file, output_file='index.html', template='index.html'):
-    urls = get_urls_from_csv(input_file)
+def print_index(input_file, output_file='index.html', template='index.html',
+                url_media_column='twitter.tweet/mediaUrls'):
+    urls = get_urls_from_csv(input_file, url_media_column)
     template = load_template(template)
     rendered = template.render(twitter_images=urls)
     with open(output_file, 'w') as f:
@@ -29,9 +30,18 @@ def get_arguments():
     p.add_argument('-o' '--output-file', metavar='PATH', dest='output_file')
     return p.parse_args()
 
+def remove_matching_braces(from_string):
+    braces = [('[', ']'), ('{','}'), ('(', ')')]
+    for pair in braces:
+        if from_string[0] == pair[0] and from_string[-1] == pair[1]:
+            debraced_string = from_string[1:-1]
+        else:
+            debraced_string = from_string
+    return debraced_string
+
+
 def get_urls_from_csv(csv_file,
-                      url_column_name='media_urls',
-                      news_column_name='NewsNotNews'):
+                      url_column_name='twitter.tweet/mediaUrls'):
     """
     Return a list of image paths, given a csv file
 
@@ -46,25 +56,23 @@ def get_urls_from_csv(csv_file,
     with open(csv_file, 'r') as f:
         reader = csv.DictReader(f)
         for row in reader:
-            # Check for an existing result for this url
-            url_already_found = False
-            for result in results:
-                if result['url'] == row[url_column_name]:
-                    current_count = result['count']
-                    result['count'] = current_count + 1
-                    url_already_found = True
-
-            if not url_already_found:
-                new_url = {}
-                new_url['url'] = row[url_column_name]
-                new_url['count'] = 1
-                if row[news_column_name].lower() == 'news':
-                    new_url['relevant'] = True
-                else:
-                    new_url['relevant'] = False
-                results.append(new_url)
+            content = remove_matching_braces(row[url_column_name])
+            if content[:20] == "http://pbs.twimg.com":
+                # Check for an existing result for this url
+                url_already_found = False
+                for result in results:
+                    if result['url'] == content:
+                        current_count = result['count']
+                        result['count'] = current_count + 1
+                        url_already_found = True
+                if not url_already_found:
+                    new_url = {}
+                    new_url['url'] = content
+                    new_url['count'] = 1
+                    results.append(new_url)
+            else:
+                print("Weird content! " + content)
     return results
-
 
 def main():
     get_arguments()
