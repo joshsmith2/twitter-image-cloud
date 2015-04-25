@@ -4,13 +4,16 @@ import os
 import argparse
 import csv
 import jinja2
+from collections import OrderedDict
 
 SOURCE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 
 def print_index(input_file, output_file='index.html', template='index.html',
                 url_media_column='twitter.tweet/mediaUrls'):
+
     urls = get_urls_from_csv(input_file, url_media_column)
+    #sorted_urls = sorted(urls, key=)
     template = load_template(template)
     rendered = template.render(twitter_images=urls)
     with open(output_file, 'w') as f:
