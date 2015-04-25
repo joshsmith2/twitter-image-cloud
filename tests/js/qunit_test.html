@@ -98,7 +98,15 @@
             assert.equal(expected, result)
         }));
 
+        $(test("Only n divs visible", function(assert){
+            var visible = 4;
+            ResizeModule.limit_visible(visible);
+            ResizeModule.repack();
+            div4 = $('#item4');
+            div5 = $('#item5');
+            assert.ok($(div4).is(":visible"));
+            assert.ok($(div5).not(":visible"));
+        }));
     </script>
-
 </body>
 </html>
