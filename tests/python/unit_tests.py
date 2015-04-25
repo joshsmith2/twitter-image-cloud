@@ -20,6 +20,15 @@ class InputTest(GeneralTest):
         for e in expected:
             self.assertIn(e, response)
 
+    def test_brackets_removed(self):
+        no_brackets = "husspag"
+        observed = main.remove_matching_braces(no_brackets)
+        self.assertEqual(no_brackets, observed)
+
+        square_brackets = "[bumbag]"
+        observed = main.remove_matching_braces(square_brackets)
+        self.assertEqual("bumbag", observed)
+
 class JinjaTests(GeneralTest):
 
     def test_can_render_test_template(self):
@@ -58,7 +67,7 @@ class ImageTests(GeneralTest):
         index_template = main.load_template()
         rendered = index_template.render(twitter_images=urls)
         rendered_stripped = re.sub(r' +', ' ', rendered)
-        tag = '<div id="item1" class="masonry-item">\n ' \
+        tag = '<div id="item1" class="packery-item">\n ' \
               '<img src="http://pbs.twimg.com/media/B4boCpyCEAExIYo.jpg">\n ' \
               '<div class="count">5</div>'
         self.assertIn(tag, rendered_stripped)

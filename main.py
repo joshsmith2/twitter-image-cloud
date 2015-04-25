@@ -34,11 +34,11 @@ def get_arguments():
 
 def remove_matching_braces(from_string):
     braces = [('[', ']'), ('{','}'), ('(', ')')]
+    debraced_string = from_string
     for pair in braces:
-        if from_string[0] == pair[0] and from_string[-1] == pair[1]:
-            debraced_string = from_string[1:-1]
-        else:
-            debraced_string = from_string
+        if from_string:
+            if from_string[0] == pair[0] and from_string[-1] == pair[1]:
+                debraced_string = from_string[1:-1]
     return debraced_string
 
 
@@ -59,21 +59,18 @@ def get_urls_from_csv(csv_file,
         reader = csv.DictReader(f)
         for row in reader:
             content = remove_matching_braces(row[url_column_name])
-            if content[:20] == "http://pbs.twimg.com":
-                # Check for an existing result for this url
-                url_already_found = False
-                for result in results:
-                    if result['url'] == content:
-                        current_count = result['count']
-                        result['count'] = current_count + 1
-                        url_already_found = True
-                if not url_already_found:
-                    new_url = {}
-                    new_url['url'] = content
-                    new_url['count'] = 1
-                    results.append(new_url)
-            else:
-                print("Weird content! " + content)
+            # Check for an existing result for this url
+            url_already_found = False
+            for result in results:
+                if result['url'] == content:
+                    current_count = result['count']
+                    result['count'] = current_count + 1
+                    url_already_found = True
+            if not url_already_found:
+                new_url = {}
+                new_url['url'] = content
+                new_url['count'] = 1
+                results.append(new_url)
     ordered_results = sorted(results, key=lambda r:r['count'], reverse=True)
     return ordered_results
 
