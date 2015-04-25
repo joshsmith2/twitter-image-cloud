@@ -16,7 +16,7 @@
 
     <div id="container">
         {% for twitter_image in twitter_images %}
-            <div id="item{{ loop.index }}" class="masonry-item">
+            <div id="item{{ loop.index }}" class="packery-item">
                 <img src="{{ twitter_image.url }}">
                 <div class="count">{{ twitter_image.count}}</div>
             </div>

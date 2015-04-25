@@ -40,7 +40,7 @@ $(document).ready(function(){
     // Packery
     var pckry = new Packery( container, {
       // options
-        itemSelector: '.masonry-item',
+        itemSelector: '.packery-item',
         gutter: 3
     });
     imagesLoaded( container, function() {
