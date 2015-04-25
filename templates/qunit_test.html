@@ -5,7 +5,8 @@
     <title>Javascript tests</title>
     <link type="text/css" rel="stylesheet" href="../../css/main.css">
     <link rel="stylesheet" href="qunit-1.18.0.css">
-    <script src="../../js/masonry.pkgd.min.js"></script>
+    <script type="text/javascript" src="../../js/imagesloaded.pkgd.min.js"></script>
+    <script src="../../js/packery.pkgd.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 </head>
 <body>
@@ -13,13 +14,13 @@
     <div id="qunit"></div>
     <div id="qunit-fixture"></div>
 
-    <div class="masonry">
-    {% for twitter_image in twitter_images %}
-        <div class="masonry-item">
-            <img src="{{ twitter_image.url }}">
-            <div class="count">{{ twitter_image.count}}</div>
-        </div>
-    {% endfor %}
+    <div id="container">
+        {% for twitter_image in twitter_images %}
+            <div id="item{{ loop.index }}" class="masonry-item">
+                <img src="{{ twitter_image.url }}">
+                <div class="count">{{ twitter_image.count}}</div>
+            </div>
+        {% endfor %}
     </div>
 
     <script src="../../js/resize.js"></script>
@@ -32,7 +33,7 @@
         }));
 
         $(test("get_max_count()", function(assert){
-            var expected = 4;
+            var expected = 5;
             var result = ResizeModule.get_max_count();
             assert.equal(expected, result)
         }));
