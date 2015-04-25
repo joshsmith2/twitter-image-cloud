@@ -16,7 +16,7 @@ class InputTest(GeneralTest):
                     {'url': 'http://pbs.twimg.com/media/B2PlfAkCUAE0886.png',
                      'count': 1},
                     {'url': 'http://pbs.twimg.com/media/B4boCpyCEAExIYo.jpg',
-                     'count': 4}]
+                     'count': 5}]
         for e in expected:
             self.assertIn(e, response)
 
@@ -49,7 +49,7 @@ class ImageTests(GeneralTest):
         index_template = main.load_template()
         rendered = index_template.render(twitter_images=urls)
         tag = '<img src="http://pbs.twimg.com/media/B4boCpyCEAExIYo.jpg">\n' \
-              ' <div class="count">4</div>'
+              ' <div class="count">5</div>'
         rendered_stripped = re.sub(r' +', ' ', rendered)
         self.assertIn(tag, rendered_stripped)
 
@@ -59,8 +59,8 @@ class ImageTests(GeneralTest):
         rendered = index_template.render(twitter_images=urls)
         rendered_stripped = re.sub(r' +', ' ', rendered)
         tag = '<div id="item1" class="masonry-item">\n ' \
-              '<img src="http://pbs.twimg.com/media/B0nPH21IIAAeHiw.jpg">\n ' \
-              '<div class="count">4</div>'
+              '<img src="http://pbs.twimg.com/media/B4boCpyCEAExIYo.jpg">\n ' \
+              '<div class="count">5</div>'
         self.assertIn(tag, rendered_stripped)
 
 if __name__ == '__main__':

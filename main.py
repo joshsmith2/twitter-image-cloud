@@ -13,7 +13,6 @@ def print_index(input_file, output_file='index.html', template='index.html',
                 url_media_column='twitter.tweet/mediaUrls'):
 
     urls = get_urls_from_csv(input_file, url_media_column)
-    #sorted_urls = sorted(urls, key=)
     template = load_template(template)
     rendered = template.render(twitter_images=urls)
     with open(output_file, 'w') as f:
@@ -75,7 +74,8 @@ def get_urls_from_csv(csv_file,
                     results.append(new_url)
             else:
                 print("Weird content! " + content)
-    return results
+    ordered_results = sorted(results, key=lambda r:r['count'], reverse=True)
+    return ordered_results
 
 def main():
     get_arguments()
