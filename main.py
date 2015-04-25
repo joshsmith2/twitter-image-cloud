@@ -58,19 +58,20 @@ def get_urls_from_csv(csv_file,
     with open(csv_file, 'r') as f:
         reader = csv.DictReader(f)
         for row in reader:
-            content = remove_matching_braces(row[url_column_name])
-            # Check for an existing result for this url
-            url_already_found = False
-            for result in results:
-                if result['url'] == content:
-                    current_count = result['count']
-                    result['count'] = current_count + 1
-                    url_already_found = True
-            if not url_already_found:
-                new_url = {}
-                new_url['url'] = content
-                new_url['count'] = 1
-                results.append(new_url)
+            image_url = remove_matching_braces(row[url_column_name])
+            if image_url: # Don't get tweets without images
+                # Check for an existing result for this url
+                url_already_found = False
+                for result in results:
+                    if result['url'] == image_url:
+                        current_count = result['count']
+                        result['count'] = current_count + 1
+                        url_already_found = True
+                if not url_already_found:
+                    new_url = {}
+                    new_url['url'] = image_url
+                    new_url['count'] = 1
+                    results.append(new_url)
     ordered_results = sorted(results, key=lambda r:r['count'], reverse=True)
     return ordered_results
 

@@ -40,9 +40,8 @@ $(function() {
     };
 
     var limit_visible = function(visible_imgs){
-        console.log("In limit");
         // Set default value to 500, if none given
-        visible_images = typeof visible_imgs !== "undefined" ? visible_imgs : 500;
+        visible_imgs = typeof visible_imgs !== "undefined" ? visible_imgs : 300;
         // This is the prefix we're using for the Packery items.
         prefix = 'item';
         $('.packery-item').each(function(){
@@ -64,7 +63,7 @@ $(function() {
 });
 
 $(document).ready(function(){
-    ResizeModule.resize_divs();
     ResizeModule.limit_visible();
+    ResizeModule.resize_divs();
     ResizeModule.repack();
 });
