@@ -28,16 +28,15 @@ $(function() {
         });
     };
 
-    var repack = function(){
-        var container = document.querySelector('#container');
-        var pckry = new Packery( container, {
-            itemSelector: '.packery-item',
-            gutter: 3
-        });
-        imagesLoaded( container, function() {
-            pckry.layout();
+    var repack = function($packery_container){
+        imagesLoaded( $packery_container, function() {
+            $packery_container.packery();
         })
     };
+
+    /*var make_draggable = function(packery_container){
+        $packery
+    };*/
 
     var limit_visible = function(visible_imgs){
         // Set default value to 500, if none given
@@ -65,5 +64,16 @@ $(function() {
 $(document).ready(function(){
     ResizeModule.limit_visible();
     ResizeModule.resize_divs();
-    ResizeModule.repack();
+    /*var container = document.querySelector('#container');
+    var pckry = new Packery( container, {
+        itemSelector: '.packery-item',
+        gutter: 3
+    });*/
+
+    var $container = $('#container').packery({
+        itemSelector: '.packery-item',
+        gutter: 3
+    });
+
+    ResizeModule.repack($container);
 });

@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="qunit-1.18.0.css">
     <script type="text/javascript" src="../../js/imagesloaded.pkgd.min.js"></script>
     <script src="../../js/packery.pkgd.min.js"></script>
+    <script type="text/javascript" src="../../js/draggabilly.pkgd.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 </head>
 <body>
@@ -41,7 +42,12 @@
         $(test("Only n divs visible", function(assert){
             var visible = 4;
             ResizeModule.limit_visible(visible);
-            ResizeModule.repack();
+            var container = document.querySelector('#container');
+            var pckry = new Packery( container, {
+                itemSelector: '.packery-item',
+                gutter: 3
+            });
+            ResizeModule.repack(pckry);
             div4 = $('#item4');
             div5 = $('#item5');
             assert.ok($(div4).is(":visible"));
