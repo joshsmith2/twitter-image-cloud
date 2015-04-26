@@ -2,18 +2,15 @@ body{
     background-color: #000;
 }
 
-.masonry{
-    margin: auto;
-}
-
-.masonry-item{
-    padding-bottom: 0;
-}
-
 img{
     width: 100%;
 }
 
 .count{
     display: none;
+}
+
+.packery-item.is-positioning-post-drag {
+  opacity: 0.5;
+
 }

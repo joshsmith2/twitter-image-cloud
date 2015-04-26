@@ -51,7 +51,8 @@ $(function() {
         $('.packery-item').each(function(){
             var rank = parseInt($(this).attr('id').substr(prefix.length));
             if (rank > visible_imgs){
-                $(this).hide()
+                $(this).hide();
+                $(this).removeClass('packery-item');
             }
         });
 
@@ -66,7 +67,7 @@ $(function() {
 });
 
 $(document).ready(function(){
-    ResizeModule.limit_visible();
+    ResizeModule.limit_visible(200);
     ResizeModule.resize_divs();
     var packery_item_selector = '.packery-item';
     var container = document.querySelector('#container');
