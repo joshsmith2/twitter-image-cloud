@@ -95,6 +95,12 @@
                 <div class="pin"></div>
             </div>
         
+            <div id="item14" class="packery-item">
+                <img src="http://pbs.twimg.com/media/777777777777777.png">
+                <div class="count">1</div>
+                <div class="pin"></div>
+            </div>
+        
     </div>
 
     <script src="../../js/resize.js"></script>
@@ -110,6 +116,17 @@
             var expected = 5;
             var result = ResizeModule.get_max_count();
             assert.equal(expected, result)
+        }));
+
+        $(test("404'd images invisible", function(assert){
+            // Find the dead item
+            $('.packery-item').each(function(){
+                var img = $(this).children('img').first();
+                var dead_link = 'http://pbs.twimg.com/media/777777777777777.png';
+                if ($(img).attr('src') == dead_link){
+                    assert.notOk($(this).is(':visible'))
+                }
+            });
         }));
 
         $(test("Only n divs visible", function(assert){
@@ -131,9 +148,12 @@
             var $element = $('.packery-item').first();
             var pin = $element.children('.pin').first();
             assert.notOk($(pin).is(":visible"));
+            assert.notOk($element.hasClass("stamped"));
             $(pin).click();
             assert.ok($element.hasClass("stamped"))
         }));
+
+
     </script>
 </body>
 </html>
