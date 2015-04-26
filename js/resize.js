@@ -58,12 +58,27 @@ $(function() {
 
     };
 
-    // Return functions for use in unit tests
+    var make_items_pinnable = function(packery_instance, pin_selector){
+        pin_selector = typeof pin_selector !== "undefined" ? pin_selector : '.pin'
+        $('.pin').click(function(){
+            var parent = $(this).parent();
+            if ($(parent).hasClass('stamped')){
+                packery_instance.unstamp(parent);
+                $(parent).removeClass('stamped');
+            }else{
+                packery_instance.stamp(parent);
+                $(parent).addClass('stamped');
+            }
+        });
+    };
+
+    // Return functions for use in unit tests as well as on doc load
     ResizeModule.resize_divs = resize_divs;
     ResizeModule.get_max_count = get_max_count;
     ResizeModule.repack = repack;
     ResizeModule.limit_visible = limit_visible;
     ResizeModule.make_draggable = make_draggable;
+    ResizeModule.make_items_pinnable = make_items_pinnable;
 });
 
 $(document).ready(function(){
@@ -75,6 +90,8 @@ $(document).ready(function(){
         itemSelector: packery_item_selector,
         gutter: 3
     });
+    ResizeModule.make_items_pinnable(pckry);
     ResizeModule.make_draggable(pckry);
     ResizeModule.repack(pckry);
+
 });

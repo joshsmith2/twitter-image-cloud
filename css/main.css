@@ -16,6 +16,10 @@ img{
     display: none;
 }
 
+.stamped .pin{
+    background-image: url('../img/unpin.png') ;
+}
+
 .packery-item:hover .pin{
     display: inline-block;
 }
