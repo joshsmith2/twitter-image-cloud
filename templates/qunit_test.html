@@ -20,6 +20,7 @@
             <div id="item{{ loop.index }}" class="packery-item">
                 <img src="{{ twitter_image.url }}">
                 <div class="count">{{ twitter_image.count}}</div>
+                <div class="pin"></div>
             </div>
         {% endfor %}
     </div>
@@ -52,6 +53,14 @@
             div5 = $('#item5');
             assert.ok($(div4).is(":visible"));
             assert.ok($(div5).not(":visible"));
+        }));
+
+        $(test("Pin functionality", function(assert){
+            var $element = $('.packery-item').first();
+            var pin = $element.children('.pin').first();
+            assert.notOk($(pin).is(":visible"));
+            $(pin).click();
+            assert.ok($element.hasClass("stamped"))
         }));
     </script>
 </body>
