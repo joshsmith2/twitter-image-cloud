@@ -28,15 +28,25 @@ $(function() {
         });
     };
 
-    var repack = function($packery_container){
-        imagesLoaded( $packery_container, function() {
-            $packery_container.packery();
+    var repack = function(packery_instance){
+        imagesLoaded( container, function() {
+            packery_instance.layout();
         })
     };
 
-    /*var make_draggable = function(packery_container){
-        $packery
-    };*/
+    var make_draggable = function(packery_instance){
+        var items = packery_instance.getItemElements();
+        for ( var i=0, len = items.length; i < len; i++ ) {
+            var item = items[i];
+            var a_drag = new Draggabilly( item );
+            packery_instance.bindDraggabillyEvents( a_drag );
+            a_drag.on('dragEnd', function(){
+                packery_instance.layout();
+                a_drag.removeClass();
+                console.log("Drag ended")
+            });
+        }
+    };
 
     var limit_visible = function(visible_imgs){
         // Set default value to 500, if none given
@@ -45,8 +55,6 @@ $(function() {
         prefix = 'item';
         $('.packery-item').each(function(){
             var rank = parseInt($(this).attr('id').substr(prefix.length));
-            console.log("Visible images: " + visible_imgs);
-            console.log("Rank: " + rank);
             if (rank > visible_imgs){
                 $(this).hide()
             }
@@ -59,21 +67,19 @@ $(function() {
     ResizeModule.get_max_count = get_max_count;
     ResizeModule.repack = repack;
     ResizeModule.limit_visible = limit_visible;
+    ResizeModule.make_draggable = make_draggable;
 });
 
 $(document).ready(function(){
     ResizeModule.limit_visible();
     ResizeModule.resize_divs();
-    /*var container = document.querySelector('#container');
-    var pckry = new Packery( container, {
-        itemSelector: '.packery-item',
-        gutter: 3
-    });*/
 
-    var $container = $('#container').packery({
-        itemSelector: '.packery-item',
+    var packery_item_selector = '.packery-item';
+    var container = document.querySelector('#container');
+    var pckry = new Packery( container, {
+        itemSelector: packery_item_selector,
         gutter: 3
     });
-
-    ResizeModule.repack($container);
+    ResizeModule.make_draggable(pckry);
+    ResizeModule.repack(pckry);
 });
