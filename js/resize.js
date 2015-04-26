@@ -40,11 +40,6 @@ $(function() {
             var item = items[i];
             var a_drag = new Draggabilly( item );
             packery_instance.bindDraggabillyEvents( a_drag );
-            a_drag.on('dragEnd', function(){
-                packery_instance.layout();
-                a_drag.removeClass();
-                console.log("Drag ended")
-            });
         }
     };
 
@@ -73,7 +68,6 @@ $(function() {
 $(document).ready(function(){
     ResizeModule.limit_visible();
     ResizeModule.resize_divs();
-
     var packery_item_selector = '.packery-item';
     var container = document.querySelector('#container');
     var pckry = new Packery( container, {
