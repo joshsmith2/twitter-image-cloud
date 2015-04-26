@@ -40,15 +40,12 @@
             assert.equal(expected, result)
         }));
 
-        $(test("404'd images invisible", function(assert){
-            // Find the dead item
-            $('.packery-item').each(function(){
-                var img = $(this).children('img').first();
-                var dead_link = 'http://pbs.twimg.com/media/777777777777777.png';
-                if ($(img).attr('src') == dead_link){
-                    assert.notOk($(this).is(':visible'))
-                }
-            });
+        $(test("404'd images never rendered", function(assert){
+            if ($('#item14').length){
+                assert.ok(false);
+            }else{
+                assert.ok(true);
+            }
         }));
 
         $(test("Only n divs visible", function(assert){
@@ -74,8 +71,6 @@
             $(pin).click();
             assert.ok($element.hasClass("stamped"))
         }));
-
-
     </script>
 </body>
 </html>

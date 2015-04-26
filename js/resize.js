@@ -59,7 +59,7 @@ $(function() {
     };
 
     var make_items_pinnable = function(packery_instance, pin_selector){
-        pin_selector = typeof pin_selector !== "undefined" ? pin_selector : '.pin'
+        pin_selector = typeof pin_selector !== "undefined" ? pin_selector : '.pin';
         $('.pin').click(function(){
             var parent = $(this).parent();
             if ($(parent).hasClass('stamped')){
@@ -72,6 +72,9 @@ $(function() {
         });
     };
 
+    var main = function(){
+    };
+
     // Return functions for use in unit tests as well as on doc load
     ResizeModule.resize_divs = resize_divs;
     ResizeModule.get_max_count = get_max_count;
@@ -79,6 +82,7 @@ $(function() {
     ResizeModule.limit_visible = limit_visible;
     ResizeModule.make_draggable = make_draggable;
     ResizeModule.make_items_pinnable = make_items_pinnable;
+    ResizeModule.main = main;
 });
 
 $(document).ready(function(){
@@ -90,8 +94,14 @@ $(document).ready(function(){
         itemSelector: packery_item_selector,
         gutter: 3
     });
+    // Remove the divs of any images which fail to lead from the DOM
+    $(".packery-item img").each(function(){
+        $(this).error(function(){
+            var _parent = $(this).parent();
+            pckry.remove(_parent);
+        });
+    });
     ResizeModule.make_items_pinnable(pckry);
     ResizeModule.make_draggable(pckry);
     ResizeModule.repack(pckry);
-
 });
