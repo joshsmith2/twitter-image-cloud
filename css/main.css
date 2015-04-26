@@ -6,11 +6,25 @@ img{
     width: 100%;
 }
 
-.count{
+.pin{
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-image: url('../img/pin.png');
     display: none;
+}
+
+.packery-item:hover .pin{
+    display: inline-block;
 }
 
 .packery-item.is-positioning-post-drag {
   opacity: 0.5;
-
 }
+
+.count{
+    display: none;
+}
+
