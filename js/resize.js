@@ -85,6 +85,7 @@ $(function() {
     ResizeModule.limit_visible = limit_visible;
     ResizeModule.make_draggable = make_draggable;
     ResizeModule.make_items_pinnable = make_items_pinnable;
+    ResizeModule.make_images_expandable = make_images_expandable;
 });
 
 $(document).ready(function(){
@@ -103,6 +104,7 @@ $(document).ready(function(){
             pckry.remove(_parent);
         });
     });
+    ResizeModule.make_images_expandable();
     ResizeModule.make_items_pinnable(pckry);
     ResizeModule.make_draggable(pckry);
     ResizeModule.repack(pckry);
