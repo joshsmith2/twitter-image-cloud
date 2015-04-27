@@ -74,7 +74,11 @@ $(function() {
 
     var make_images_expandable = function(){
         $('.packery-item').dblclick(function(){
-             $(this).css('width', 'auto');
+            if ($(this).hasClass('expanded')){
+                $(this).removeClass('expanded');
+            }else{
+                $(this).addClass('expanded');
+            }
         });
     };
 

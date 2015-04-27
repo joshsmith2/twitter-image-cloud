@@ -150,11 +150,13 @@
             assert.ok($element.hasClass("stamped"))
         }));
 
-        $(test("Divs expand on double click", function(assert){
+        $(test("Divs expand / collapse on double click", function(assert){
             var element = $('#item1');
             assert.ok($(element).width() <= 340);
             $(element).dblclick();
             assert.ok($(element).width() > 340);
+            $(element).dblclick();
+            assert.ok($(element).width() <= 340);
         }));
 
     </script>

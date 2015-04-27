@@ -17,7 +17,8 @@ img{
 }
 
 .expanded{
-    width: auto;
+    width: auto!important;
+    z-index: 100;
 }
 
 .stamped .pin{
