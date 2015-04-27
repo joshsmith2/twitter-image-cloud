@@ -16,6 +16,10 @@ img{
     display: none;
 }
 
+.expanded{
+    width: auto;
+}
+
 .stamped .pin{
     background-image: url('../img/unpin.png') ;
 }

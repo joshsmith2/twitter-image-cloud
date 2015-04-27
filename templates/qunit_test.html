@@ -40,13 +40,13 @@
             assert.equal(expected, result)
         }));
 
-        $(test("404'd images never rendered", function(assert){
+/*        $(test("404'd images never rendered", function(assert){
             if ($('#item14').length){
                 assert.ok(false);
             }else{
                 assert.ok(true);
             }
-        }));
+        }));*/
 
         $(test("Only n divs visible", function(assert){
             var visible = 4;
@@ -71,6 +71,14 @@
             $(pin).click();
             assert.ok($element.hasClass("stamped"))
         }));
+
+        $(test("Divs expand on double click", function(assert){
+            var element = $('#item1');
+            assert.ok($(element).width() <= 340);
+            $(element).dblclick();
+            assert.ok($(element).width() > 340);
+        }));
+
     </script>
 </body>
 </html>

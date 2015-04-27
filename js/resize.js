@@ -60,7 +60,7 @@ $(function() {
 
     var make_items_pinnable = function(packery_instance, pin_selector){
         pin_selector = typeof pin_selector !== "undefined" ? pin_selector : '.pin';
-        $('.pin').click(function(){
+        $(pin_selector).click(function(){
             var parent = $(this).parent();
             if ($(parent).hasClass('stamped')){
                 packery_instance.unstamp(parent);
@@ -72,7 +72,10 @@ $(function() {
         });
     };
 
-    var main = function(){
+    var make_images_expandable = function(){
+        $('.packery-item').dblclick(function(){
+             $(this).css('width', 'auto');
+        });
     };
 
     // Return functions for use in unit tests as well as on doc load
@@ -82,7 +85,6 @@ $(function() {
     ResizeModule.limit_visible = limit_visible;
     ResizeModule.make_draggable = make_draggable;
     ResizeModule.make_items_pinnable = make_items_pinnable;
-    ResizeModule.main = main;
 });
 
 $(document).ready(function(){
