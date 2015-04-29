@@ -58,6 +58,7 @@ class ImageTests(GeneralTest):
         index_template = main.load_template()
         rendered = index_template.render(twitter_images=urls)
         tag = '<img src="http://pbs.twimg.com/media/B4boCpyCEAExIYo.jpg">\n ' \
+              '<button class="merge">Merge</button>\n ' \
               '<div class="image-footer">\n '\
               '<div class="share-count">\n ' \
               '<span class="count">5</span> shares'

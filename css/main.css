@@ -55,6 +55,31 @@ img{
     font-size: 1.5em;
 }
 
+/* Merge mode */
+.merge-candidate{
+    border: 2px solid cornflowerblue;
+    margin: -2px; /*Stops element from moving */
+}
+
+button.merge{
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: none;
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    padding: 5px 10px;
+    background-color: rgba(255,255,255,0.2);
+    border: none;
+}
+
+button.merge:hover{
+    background-color: rgba(255,255,255,0.7);
+}
+
+.expanded button.merge{
+    display: block;
+}
 
 
 

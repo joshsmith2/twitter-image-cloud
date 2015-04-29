@@ -17,153 +17,23 @@
     <div id="qunit"></div>
     <div id="qunit-fixture"></div>
 
-        <div id="container">
-    
-        <div id="item1" class="packery-item">
-            <img src="http://pbs.twimg.com/media/B4boCpyCEAExIYo.jpg">
+    <div id="container">
+    {% for twitter_image in twitter_images %}
+        <div id="item{{ loop.index }}" class="packery-item">
+            <img src="{{ twitter_image.url }}">
+            <button class="merge">Merge</button>
             <div class="image-footer">
                 <div class="share-count">
-                    <span class="count">5</span> shares
+                    <span class="count">{{ twitter_image.count}}</span> {{ twitter_image.share_text }}
                 </div>
             </div>
             <div class="pin"></div>
         </div>
-    
-        <div id="item2" class="packery-item">
-            <img src="http://pbs.twimg.com/media/B0vMX4nCQAEK63o.jpg">
-            <div class="image-footer">
-                <div class="share-count">
-                    <span class="count">4</span> shares
-                </div>
-            </div>
-            <div class="pin"></div>
-        </div>
-    
-        <div id="item3" class="packery-item">
-            <img src="http://pbs.twimg.com/media/B51oL3fIcAA9j9L.png">
-            <div class="image-footer">
-                <div class="share-count">
-                    <span class="count">2</span> shares
-                </div>
-            </div>
-            <div class="pin"></div>
-        </div>
-    
-        <div id="item4" class="packery-item">
-            <img src="http://pbs.twimg.com/media/A4nysuNCQAERXAW.jpg">
-            <div class="image-footer">
-                <div class="share-count">
-                    <span class="count">1</span> share
-                </div>
-            </div>
-            <div class="pin"></div>
-        </div>
-    
-        <div id="item5" class="packery-item">
-            <img src="http://pbs.twimg.com/media/AhCjxLyCQAAZ7Ug.jpg">
-            <div class="image-footer">
-                <div class="share-count">
-                    <span class="count">1</span> share
-                </div>
-            </div>
-            <div class="pin"></div>
-        </div>
-    
-        <div id="item6" class="packery-item">
-            <img src="http://pbs.twimg.com/media/Ajxb2c6CQAAzQTg.jpg">
-            <div class="image-footer">
-                <div class="share-count">
-                    <span class="count">1</span> share
-                </div>
-            </div>
-            <div class="pin"></div>
-        </div>
-    
-        <div id="item7" class="packery-item">
-            <img src="http://pbs.twimg.com/media/AoxQ3CECIAAsArF.jpg">
-            <div class="image-footer">
-                <div class="share-count">
-                    <span class="count">1</span> share
-                </div>
-            </div>
-            <div class="pin"></div>
-        </div>
-    
-        <div id="item8" class="packery-item">
-            <img src="http://pbs.twimg.com/media/B05WaEVIQAA9JMu.jpg">
-            <div class="image-footer">
-                <div class="share-count">
-                    <span class="count">1</span> share
-                </div>
-            </div>
-            <div class="pin"></div>
-        </div>
-    
-        <div id="item9" class="packery-item">
-            <img src="http://pbs.twimg.com/media/B0nPH21IIAAeHiw.jpg">
-            <div class="image-footer">
-                <div class="share-count">
-                    <span class="count">1</span> share
-                </div>
-            </div>
-            <div class="pin"></div>
-        </div>
-    
-        <div id="item10" class="packery-item">
-            <img src="http://pbs.twimg.com/media/B2phtptIMAE0rge.jpg">
-            <div class="image-footer">
-                <div class="share-count">
-                    <span class="count">1</span> share
-                </div>
-            </div>
-            <div class="pin"></div>
-        </div>
-    
-        <div id="item11" class="packery-item">
-            <img src="http://pbs.twimg.com/media/B2PlfAkCUAE0886.png">
-            <div class="image-footer">
-                <div class="share-count">
-                    <span class="count">1</span> share
-                </div>
-            </div>
-            <div class="pin"></div>
-        </div>
-    
-        <div id="item12" class="packery-item">
-            <img src="http://pbs.twimg.com/media/B51ijpPCUAEbBeE.jpg">
-            <div class="image-footer">
-                <div class="share-count">
-                    <span class="count">1</span> share
-                </div>
-            </div>
-            <div class="pin"></div>
-        </div>
-    
-        <div id="item13" class="packery-item">
-            <img src="http://pbs.twimg.com/media/B51l7U3IUAAr9-E.jpg">
-            <div class="image-footer">
-                <div class="share-count">
-                    <span class="count">1</span> share
-                </div>
-            </div>
-            <div class="pin"></div>
-        </div>
-    
-        <div id="item14" class="packery-item">
-            <img src="http://pbs.twimg.com/media/777777777777777.png">
-            <div class="image-footer">
-                <div class="share-count">
-                    <span class="count">1</span> share
-                </div>
-            </div>
-            <div class="pin"></div>
-        </div>
-    
+    {% endfor %}
     </div>
-
     <script src="../../js/resize.js"></script>
     <script src="qunit-1.18.0.js"></script>
-    <script>
+    <script type="text/javascript">
         $(test("Test borders turn on and off in modify mode", function (assert) {
             assert.equal(window.mode, 'drag');
 
@@ -180,7 +50,16 @@
             $button.click();
             assert.equal(window.mode, 'merge');
             $('#item10').mouseover();
-            assert.ok($('#item10').css("border-width") > 0);
+
+            b_w_string = $('#item10').css("border-width").slice(0,-2);
+            border_width = parseInt(b_w_string);
+            assert.ok(border_width > 0);
+            $('#item10').mouseleave();
+
+            $button.click();
+            assert.equal(window.mode, 'drag');
+            $('#item10').mouseover();
+            assert.equal($('#item10').css("border-width"), "0px");
         }));
     </script>
 </body>

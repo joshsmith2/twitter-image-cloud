@@ -4,6 +4,8 @@
  */
 
 window.ResizeModule = {};
+window.mode = 'drag';
+window.prev_mode = 'drag';
 
 $(function() {
 
@@ -82,6 +84,31 @@ $(function() {
         });
     };
 
+    bind_mode_change_to_merge_button = function(){
+        $('button.merge').click(function(){
+            if (window.mode != 'merge'){
+                window.prev_mode = window.mode;
+                window.mode = 'merge';
+            }else{
+                // Swap window.mode and window.prev_mode
+                middleman = window.mode;
+                window.mode = window.prev_mode;
+                window.prev_mode = middleman;
+            }
+        });
+    };
+
+    bind_merge_mode_mouseover = function(){
+        $('.packery-item').mouseover(function(){
+            if (window.mode == 'merge'){
+                $(this).addClass('merge-candidate');
+            }
+        });
+        $('.packery-item').mouseleave(function(){
+            $(this).removeClass('merge-candidate');
+        });
+    };
+
     // Return functions for use in unit tests as well as on doc load
     ResizeModule.resize_divs = resize_divs;
     ResizeModule.get_max_count = get_max_count;
@@ -90,6 +117,9 @@ $(function() {
     ResizeModule.make_draggable = make_draggable;
     ResizeModule.make_items_pinnable = make_items_pinnable;
     ResizeModule.make_images_expandable = make_images_expandable;
+
+    bind_mode_change_to_merge_button();
+    bind_merge_mode_mouseover();
 });
 
 $(document).ready(function(){
