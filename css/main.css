@@ -44,8 +44,8 @@ img{
     position: absolute;
     height: 40px;
     bottom: -37px;
-    background-color: #000;
-    color: white;
+    background-color: #FFF;
+    color: #000;
 
     display: none;
 }
