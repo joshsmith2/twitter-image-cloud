@@ -5,6 +5,8 @@
     <title>Javascript tests</title>
     <link type="text/css" rel="stylesheet" href="../../css/main.css">
     <link rel="stylesheet" href="qunit-1.18.0.css">
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,100' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Lato:100,300' rel='stylesheet' type='text/css'>
     <script type="text/javascript" src="../../js/imagesloaded.pkgd.min.js"></script>
     <script src="../../js/packery.pkgd.min.js"></script>
     <script type="text/javascript" src="../../js/draggabilly.pkgd.min.js"></script>
@@ -15,14 +17,18 @@
     <div id="qunit"></div>
     <div id="qunit-fixture"></div>
 
-    <div id="container">
-        {% for twitter_image in twitter_images %}
-            <div id="item{{ loop.index }}" class="packery-item">
-                <img src="{{ twitter_image.url }}">
-                <div class="count">{{ twitter_image.count}}</div>
-                <div class="pin"></div>
+        <div id="container">
+    {% for twitter_image in twitter_images %}
+        <div id="item{{ loop.index }}" class="packery-item">
+            <img src="{{ twitter_image.url }}">
+            <div class="image-footer">
+                <div class="share-count">
+                    <span class="count">{{ twitter_image.count}}</span> shares
+                </div>
             </div>
-        {% endfor %}
+            <div class="pin"></div>
+        </div>
+    {% endfor %}
     </div>
 
     <script src="../../js/resize.js"></script>
@@ -38,6 +44,10 @@
             var expected = 5;
             var result = ResizeModule.get_max_count();
             assert.equal(expected, result)
+        }));
+
+        $(test("images larger than minimum", function(assert){
+            assert.ok($('#item1').width() > 40)
         }));
 
 /*        $(test("404'd images never rendered", function(assert){

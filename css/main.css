@@ -1,5 +1,7 @@
 body{
     background-color: #000;
+    font-family: 'Lato', sans-serif;
+    font-weight: 100;
 }
 
 img{
@@ -21,6 +23,10 @@ img{
     z-index: 100;
 }
 
+.expanded .image-footer{
+    display: block;
+}
+
 .stamped .pin{
     background-image: url('../img/unpin.png') ;
 }
@@ -33,7 +39,22 @@ img{
   opacity: 0.5;
 }
 
-.count{
+.image-footer{
+    width: 100%;
+    position: absolute;
+    height: 40px;
+    bottom: -37px;
+    background-color: #000;
+    color: white;
+
     display: none;
 }
+
+.share-count{
+    margin: 4px 0 0 10px;
+    font-size: 1.5em;
+}
+
+
+
 

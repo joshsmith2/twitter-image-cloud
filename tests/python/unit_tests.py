@@ -57,8 +57,10 @@ class ImageTests(GeneralTest):
         urls = main.get_urls_from_csv(self.test_csv_in, 'media_urls')
         index_template = main.load_template()
         rendered = index_template.render(twitter_images=urls)
-        tag = '<img src="http://pbs.twimg.com/media/B4boCpyCEAExIYo.jpg">\n' \
-              ' <div class="count">5</div>'
+        tag = '<img src="http://pbs.twimg.com/media/B4boCpyCEAExIYo.jpg">\n ' \
+              '<div class="image-footer">\n '\
+              '<div class="share-count">\n ' \
+              '<span class="count">5</span> shares'
         rendered_stripped = re.sub(r' +', ' ', rendered)
         self.assertIn(tag, rendered_stripped)
 
@@ -68,8 +70,7 @@ class ImageTests(GeneralTest):
         rendered = index_template.render(twitter_images=urls)
         rendered_stripped = re.sub(r' +', ' ', rendered)
         tag = '<div id="item1" class="packery-item">\n ' \
-              '<img src="http://pbs.twimg.com/media/B4boCpyCEAExIYo.jpg">\n ' \
-              '<div class="count">5</div>'
+              '<img src="http://pbs.twimg.com/media/B4boCpyCEAExIYo.jpg">\n '
         self.assertIn(tag, rendered_stripped)
 
 if __name__ == '__main__':
