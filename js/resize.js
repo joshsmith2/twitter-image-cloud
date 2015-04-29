@@ -11,8 +11,8 @@ $(function() {
     //which has it
     var get_max_count = function(){
         var counts = [];
-        $( 'img' ).each(function(){
-            counts[counts.length] = $( this ).siblings('.count').text()
+        $('.count').each(function(){
+            counts[counts.length] = $( this ).text()
         });
         // Find max count
         return Math.max.apply(Math,counts);
@@ -22,7 +22,7 @@ $(function() {
         var max_count = get_max_count();
         var max_width = 300;
         $('.packery-item').each(function(){
-            var count = $( this ).children('.count').text();
+            var count = $( this ).find('.count').text();
             var new_width = Math.round(((count / max_count) * max_width) + 40);
             $(this).width(new_width);
         });
