@@ -53,7 +53,7 @@
             <img src="http://pbs.twimg.com/media/A4nysuNCQAERXAW.jpg">
             <div class="image-footer">
                 <div class="share-count">
-                    <span class="count">1</span> shares
+                    <span class="count">1</span> share
                 </div>
             </div>
             <div class="pin"></div>
@@ -63,7 +63,7 @@
             <img src="http://pbs.twimg.com/media/AhCjxLyCQAAZ7Ug.jpg">
             <div class="image-footer">
                 <div class="share-count">
-                    <span class="count">1</span> shares
+                    <span class="count">1</span> share
                 </div>
             </div>
             <div class="pin"></div>
@@ -73,7 +73,7 @@
             <img src="http://pbs.twimg.com/media/Ajxb2c6CQAAzQTg.jpg">
             <div class="image-footer">
                 <div class="share-count">
-                    <span class="count">1</span> shares
+                    <span class="count">1</span> share
                 </div>
             </div>
             <div class="pin"></div>
@@ -83,7 +83,7 @@
             <img src="http://pbs.twimg.com/media/AoxQ3CECIAAsArF.jpg">
             <div class="image-footer">
                 <div class="share-count">
-                    <span class="count">1</span> shares
+                    <span class="count">1</span> share
                 </div>
             </div>
             <div class="pin"></div>
@@ -93,7 +93,7 @@
             <img src="http://pbs.twimg.com/media/B05WaEVIQAA9JMu.jpg">
             <div class="image-footer">
                 <div class="share-count">
-                    <span class="count">1</span> shares
+                    <span class="count">1</span> share
                 </div>
             </div>
             <div class="pin"></div>
@@ -103,7 +103,7 @@
             <img src="http://pbs.twimg.com/media/B0nPH21IIAAeHiw.jpg">
             <div class="image-footer">
                 <div class="share-count">
-                    <span class="count">1</span> shares
+                    <span class="count">1</span> share
                 </div>
             </div>
             <div class="pin"></div>
@@ -113,7 +113,7 @@
             <img src="http://pbs.twimg.com/media/B2phtptIMAE0rge.jpg">
             <div class="image-footer">
                 <div class="share-count">
-                    <span class="count">1</span> shares
+                    <span class="count">1</span> share
                 </div>
             </div>
             <div class="pin"></div>
@@ -123,7 +123,7 @@
             <img src="http://pbs.twimg.com/media/B2PlfAkCUAE0886.png">
             <div class="image-footer">
                 <div class="share-count">
-                    <span class="count">1</span> shares
+                    <span class="count">1</span> share
                 </div>
             </div>
             <div class="pin"></div>
@@ -133,7 +133,7 @@
             <img src="http://pbs.twimg.com/media/B51ijpPCUAEbBeE.jpg">
             <div class="image-footer">
                 <div class="share-count">
-                    <span class="count">1</span> shares
+                    <span class="count">1</span> share
                 </div>
             </div>
             <div class="pin"></div>
@@ -143,7 +143,7 @@
             <img src="http://pbs.twimg.com/media/B51l7U3IUAAr9-E.jpg">
             <div class="image-footer">
                 <div class="share-count">
-                    <span class="count">1</span> shares
+                    <span class="count">1</span> share
                 </div>
             </div>
             <div class="pin"></div>
@@ -153,7 +153,7 @@
             <img src="http://pbs.twimg.com/media/777777777777777.png">
             <div class="image-footer">
                 <div class="share-count">
-                    <span class="count">1</span> shares
+                    <span class="count">1</span> share
                 </div>
             </div>
             <div class="pin"></div>
@@ -224,11 +224,10 @@
         $(test("Check we're not writing 1 shares, which sounds idiotic", function(assert){
            $(".count").each(function(){
                if ($(this).text() == "1"){
-                   var suffix = $(this).parent().text();
-                   assert.ok(suffix == "share");
+                   var suffix = $(this).parent().text().trim();
+                   assert.ok(suffix == "1 share");
                    return false; //Break out of loop
                }
-
            });
         }));
 

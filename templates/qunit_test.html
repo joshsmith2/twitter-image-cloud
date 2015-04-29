@@ -23,7 +23,7 @@
             <img src="{{ twitter_image.url }}">
             <div class="image-footer">
                 <div class="share-count">
-                    <span class="count">{{ twitter_image.count}}</span> shares
+                    <span class="count">{{ twitter_image.count}}</span> {{ twitter_image.share_text }}
                 </div>
             </div>
             <div class="pin"></div>
@@ -94,11 +94,10 @@
         $(test("Check we're not writing 1 shares, which sounds idiotic", function(assert){
            $(".count").each(function(){
                if ($(this).text() == "1"){
-                   var suffix = $(this).parent().text();
-                   assert.ok(suffix == "share");
+                   var suffix = $(this).parent().text().trim();
+                   assert.ok(suffix == "1 share");
                    return false; //Break out of loop
                }
-
            });
         }));
 
