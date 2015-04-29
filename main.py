@@ -66,11 +66,13 @@ def get_urls_from_csv(csv_file,
                     if result['url'] == image_url:
                         current_count = result['count']
                         result['count'] = current_count + 1
+                        result['share_text'] = "shares"
                         url_already_found = True
                 if not url_already_found:
                     new_url = {}
                     new_url['url'] = image_url
                     new_url['count'] = 1
+                    new_url['share_text'] = "share"
                     results.append(new_url)
     ordered_results = sorted(results, key=lambda r:r['count'], reverse=True)
     return ordered_results
