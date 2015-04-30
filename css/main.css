@@ -57,8 +57,13 @@ img{
 
 /* Merge mode */
 .merge-candidate{
-    border: 2px solid cornflowerblue;
+    border: 2px solid rgb(56,100,237);
     margin: -2px; /*Stops element from moving */
+}
+
+.merge-selected{
+    border: 2px solid rgb(255,68,0);
+    margin: -2px;
 }
 
 button.merge{

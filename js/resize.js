@@ -84,21 +84,34 @@ $(function() {
         });
     };
 
+    /* One place to handle all the things we need to do when changing window
+       mode */
+    change_window_mode = function(){
+        // Swap window.mode and window.prev_mode
+        middleman = window.mode;
+        window.mode = window.prev_mode;
+        window.prev_mode = middleman;
+
+        if (window.mode != 'merge'){
+            $('.packery-item').each(function(){
+                $(this).removeClass('merge-candidate');
+                $(this).removeClass('merge-selected');
+            });
+        }
+    };
+
     bind_mode_change_to_merge_button = function(){
         $('button.merge').click(function(){
             if (window.mode != 'merge'){
                 window.prev_mode = window.mode;
                 window.mode = 'merge';
             }else{
-                // Swap window.mode and window.prev_mode
-                middleman = window.mode;
-                window.mode = window.prev_mode;
-                window.prev_mode = middleman;
+                change_window_mode()
             }
         });
     };
 
-    bind_merge_mode_mouseover = function(){
+    bind_merge_mode_mouse_actions = function(){
         $('.packery-item').mouseover(function(){
             if (window.mode == 'merge'){
                 $(this).addClass('merge-candidate');
@@ -106,6 +119,15 @@ $(function() {
         });
         $('.packery-item').mouseleave(function(){
             $(this).removeClass('merge-candidate');
+        });
+        $('.packery-item').click(function(){
+            if (window.mode == 'merge') {
+                if ($(this).hasClass('merge-selected')) {
+                    $(this).removeClass('merge-selected');
+                } else {
+                    $(this).addClass('merge-selected');
+                }
+            }
         });
     };
 
@@ -119,7 +141,7 @@ $(function() {
     ResizeModule.make_images_expandable = make_images_expandable;
 
     bind_mode_change_to_merge_button();
-    bind_merge_mode_mouseover();
+    bind_merge_mode_mouse_actions();
 });
 
 $(document).ready(function(){

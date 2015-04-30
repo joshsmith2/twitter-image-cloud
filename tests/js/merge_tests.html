@@ -177,8 +177,18 @@
     <script src="../../js/resize.js"></script>
     <script src="qunit-1.18.0.js"></script>
     <script type="text/javascript">
+        toggle_merge_mode = function(){
+            $button = $('#item1 button.merge');
+            $button.click();
+        };
+
+        get_border_width = function(from_element){
+            b_w_string = $(from_element).css("border-width").slice(0,-2);
+            return parseInt(b_w_string);
+        };
+
         $(test("Test borders turn on and off in modify mode", function (assert) {
-            assert.equal(window.mode, 'drag');
+            window.mode = 'drag';
 
             // Expand item1
             $('#item1').dblclick();
@@ -189,13 +199,11 @@
             assert.equal($('#item10').css("border-width"), "0px");
 
             // Click button, check the border changes.
-            $button = $('#item1 button.merge');
-            $button.click();
+            toggle_merge_mode()
             assert.equal(window.mode, 'merge');
 
             $('#item10').mouseover();
-            b_w_string = $('#item10').css("border-width").slice(0,-2);
-            border_width = parseInt(b_w_string);
+            border_width = get_border_width($('#item10'));
             assert.ok(border_width > 0);
             $('#item10').mouseleave();
 
@@ -207,6 +215,7 @@
         }));
 
         $(test("Borders remain on click in merge mode", function(assert){
+            window.mode = 'drag';
             // Expand item1
             $('#item2').dblclick();
             assert.ok($('#item2').hasClass('expanded'));
@@ -216,15 +225,12 @@
             assert.equal($('#item9').css("border-width"), "0px");
 
             // Click button, check the variable changes.
-            $button = $('#item1 button.merge');
-            $button.click();
+            toggle_merge_mode();
             assert.equal(window.mode, 'merge');
 
             // Click item again, check border appears and remains
             $('#item9').click();
-            assert.equal($('#item9').css("border-width"), "0px");
-            b_w_string = $('#item10').css("border-width").slice(0,-2);
-            border_width = parseInt(b_w_string);
+            border_width = get_border_width($('#item9'));
             assert.ok(border_width > 0);
 
             // Click a third time, check disappears
@@ -233,6 +239,22 @@
             $('#item2').dblclick();
         }));
 
+        $(test("Check all borders disappear when exiting merge", function(assert){
+            window.mode = 'drag';
+            assert.equal(window.mode, 'drag');
+            toggle_merge_mode();
+            assert.equal(window.mode, 'merge');
+            $("#item5").click();
+            $("#item6").click();
+            assert.ok(get_border_width($('#item5')) > 0);
+            assert.ok(get_border_width($('#item6')) > 0);
+
+            toggle_merge_mode();
+            assert.equal(get_border_width($('#item5')), 0);
+            assert.equal(get_border_width($('#item6')), 0);
+
+            toggle_merge_mode()
+        }));
     </script>
 </body>
 </html>
