@@ -12,11 +12,14 @@ class InputTest(GeneralTest):
     def test_can_get_urls_from_csv_file(self):
         response = main.get_urls_from_csv(self.test_csv_in, 'media_urls')
         expected = [{'url': 'http://pbs.twimg.com/media/AoxQ3CECIAAsArF.jpg',
-                     'count': 1},
+                     'count': 1,
+                      'share_text': "share"},
                     {'url': 'http://pbs.twimg.com/media/B2PlfAkCUAE0886.png',
-                     'count': 1},
+                     'count': 1,
+                    'share_text': "share"},
                     {'url': 'http://pbs.twimg.com/media/B4boCpyCEAExIYo.jpg',
-                     'count': 5}]
+                     'count': 5,
+                    'share_text': "shares"}]
         for e in expected:
             self.assertIn(e, response)
 
