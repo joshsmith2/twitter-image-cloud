@@ -192,8 +192,8 @@
             $button = $('#item1 button.merge');
             $button.click();
             assert.equal(window.mode, 'merge');
-            $('#item10').mouseover();
 
+            $('#item10').mouseover();
             b_w_string = $('#item10').css("border-width").slice(0,-2);
             border_width = parseInt(b_w_string);
             assert.ok(border_width > 0);
@@ -203,7 +203,36 @@
             assert.equal(window.mode, 'drag');
             $('#item10').mouseover();
             assert.equal($('#item10').css("border-width"), "0px");
+            $('#item1').dblclick();
         }));
+
+        $(test("Borders remain on click in merge mode", function(assert){
+            // Expand item1
+            $('#item2').dblclick();
+            assert.ok($('#item2').hasClass('expanded'));
+
+            //Click mouse over another item and check nothing happens
+            $('#item9').click();
+            assert.equal($('#item9').css("border-width"), "0px");
+
+            // Click button, check the variable changes.
+            $button = $('#item1 button.merge');
+            $button.click();
+            assert.equal(window.mode, 'merge');
+
+            // Click item again, check border appears and remains
+            $('#item9').click();
+            assert.equal($('#item9').css("border-width"), "0px");
+            b_w_string = $('#item10').css("border-width").slice(0,-2);
+            border_width = parseInt(b_w_string);
+            assert.ok(border_width > 0);
+
+            // Click a third time, check disappears
+            $('#item9').click();
+            assert.equal($('#item9').css("border-width"), "0px");
+            $('#item2').dblclick();
+        }));
+
     </script>
 </body>
 </html>
