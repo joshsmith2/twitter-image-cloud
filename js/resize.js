@@ -108,13 +108,19 @@ $(function() {
         }
     };
 
-    bind_mode_change_to_merge_button = function(){
+    bind_mode_change_to_merge_buttons = function(){
         $('button.merge').click(function(){
             if (window.mode != 'merge') {
                 change_window_mode('merge');
             }else{
-                change_window_mode()
+                change_window_mode();
             }
+        });
+        $('#cancel-merge').click(function(){
+            change_window_mode();
+        });
+        $('#complete-merge').click(function(){
+            change_window_mode();
         });
     };
 
@@ -148,7 +154,7 @@ $(function() {
     ResizeModule.make_images_expandable = make_images_expandable;
     ResizeModule.change_window_mode = change_window_mode;
 
-    bind_mode_change_to_merge_button();
+    bind_mode_change_to_merge_buttons();
     bind_merge_mode_mouse_actions();
 });
 
