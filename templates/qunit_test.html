@@ -17,10 +17,11 @@
     <div id="qunit"></div>
     <div id="qunit-fixture"></div>
 
-        <div id="container">
+    <div id="container">
     {% for twitter_image in twitter_images %}
         <div id="item{{ loop.index }}" class="packery-item">
             <img src="{{ twitter_image.url }}">
+            <button class="merge">Merge</button>
             <div class="image-footer">
                 <div class="share-count">
                     <span class="count">{{ twitter_image.count}}</span> {{ twitter_image.share_text }}
@@ -29,6 +30,10 @@
             <div class="pin"></div>
         </div>
     {% endfor %}
+        <div id="merge-buttons" class="hidden">
+            <button id="cancel-merge">Cancel merge</button>
+            <button id="complete-merge">Merge</button>
+        </div>
     </div>
 
     <script src="../../js/resize.js"></script>

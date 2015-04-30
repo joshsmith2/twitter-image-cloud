@@ -85,15 +85,23 @@ $(function() {
     };
 
     /* One place to handle all the things we need to do when changing window
-       mode */
-    change_window_mode = function(){
-        // Swap window.mode and window.prev_mode
-        middleman = window.mode;
-        window.mode = window.prev_mode;
-        window.prev_mode = middleman;
-
-        if (window.mode != 'merge'){
-            $('.packery-item').each(function(){
+       mode. If change_to given, change to current mode to this.
+        Otherwise, just swap them.*/
+    var change_window_mode = function(change_to) {
+        if (typeof change_to !== "undefined"){
+            window.prev_mode = window.mode;
+            window.mode = change_to;
+        }else {
+            // Swap window.mode and window.prev_mode
+            middleman = window.mode;
+            window.mode = window.prev_mode;
+            window.prev_mode = middleman;
+        }
+        if (window.mode == 'merge') {
+            $('#merge-buttons').removeClass('hidden');
+        } else {
+            $('#merge-buttons').addClass('hidden');
+            $('.packery-item').each(function () {
                 $(this).removeClass('merge-candidate');
                 $(this).removeClass('merge-selected');
             });
@@ -102,9 +110,8 @@ $(function() {
 
     bind_mode_change_to_merge_button = function(){
         $('button.merge').click(function(){
-            if (window.mode != 'merge'){
-                window.prev_mode = window.mode;
-                window.mode = 'merge';
+            if (window.mode != 'merge') {
+                change_window_mode('merge');
             }else{
                 change_window_mode()
             }
@@ -139,6 +146,7 @@ $(function() {
     ResizeModule.make_draggable = make_draggable;
     ResizeModule.make_items_pinnable = make_items_pinnable;
     ResizeModule.make_images_expandable = make_images_expandable;
+    ResizeModule.change_window_mode = change_window_mode;
 
     bind_mode_change_to_merge_button();
     bind_merge_mode_mouse_actions();

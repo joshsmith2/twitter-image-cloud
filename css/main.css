@@ -8,6 +8,10 @@ img{
     width: 100%;
 }
 
+.hidden{
+    display: none;
+}
+
 .pin{
     width: 15px;
     height: 15px;
@@ -84,6 +88,12 @@ button.merge:hover{
 
 .expanded button.merge{
     display: block;
+}
+
+#merge-buttons{
+    position: absolute;
+    top: 10px;
+    right: 10px;
 }
 
 

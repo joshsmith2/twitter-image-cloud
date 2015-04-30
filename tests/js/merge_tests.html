@@ -173,7 +173,12 @@
             <div class="pin"></div>
         </div>
     
+        <div id="merge-buttons" class="hidden">
+            <button id="cancel-merge">Cancel merge</button>
+            <button id="complete-merge">Merge</button>
+        </div>
     </div>
+
     <script src="../../js/resize.js"></script>
     <script src="qunit-1.18.0.js"></script>
     <script type="text/javascript">
@@ -199,7 +204,7 @@
             assert.equal($('#item10').css("border-width"), "0px");
 
             // Click button, check the border changes.
-            toggle_merge_mode()
+            toggle_merge_mode();
             assert.equal(window.mode, 'merge');
 
             $('#item10').mouseover();
@@ -207,7 +212,7 @@
             assert.ok(border_width > 0);
             $('#item10').mouseleave();
 
-            $button.click();
+            toggle_merge_mode();
             assert.equal(window.mode, 'drag');
             $('#item10').mouseover();
             assert.equal($('#item10').css("border-width"), "0px");
@@ -255,6 +260,42 @@
 
             toggle_merge_mode()
         }));
+
+        $(test("Check merge buttons appear when merge started", function(assert){
+            window.mode = 'drag';
+            complete_button = $('#complete-merge');
+            cancel_button = $('#cancel-merge');
+            assert.notOk(complete_button.is(':visible'));
+            assert.notOk(cancel_button.is(':visible'));
+            toggle_merge_mode();
+            assert.ok(complete_button.is(':visible'));
+            assert.ok(cancel_button.is(':visible'));
+            cancel_button.click();
+            assert.notOk(complete_button.is(':visible'));
+            assert.notOk(cancel_button.is(':visible'));
+        }));
+
+        $(test("Can change to arbitary mode", function(assert){
+            window.mode = 'drag';
+            ResizeModule.change_window_mode('butkins');
+            assert.equal(window.mode, 'butkins');
+        }));
+
+        $(test("Can change to merge and back", function(assert){
+            window.mode = 'drag';
+            ResizeModule.change_window_mode('merge');
+            assert.equal(window.mode, 'merge');
+            ResizeModule.change_window_mode();
+            assert.equal(window.mode, 'drag');
+        }));
+
+/*
+        $(test("Check merging 3 items lets one eat the other two", function(assert){
+            alpha = $('#item13');
+            food1 = $('#item1');
+            food2 = $('#item2');
+        }));
+        */
     </script>
 </body>
 </html>
