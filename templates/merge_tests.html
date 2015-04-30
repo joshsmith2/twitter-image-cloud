@@ -119,7 +119,7 @@
         }));
 
         $(test("Check merge buttons appear when merge started", function(assert){
-            window.mode = 'drag';
+            ResizeModule.change_window_mode('drag');
             complete_button = $('#complete-merge');
             cancel_button = $('#cancel-merge');
             assert.notOk(complete_button.is(':visible'));
@@ -146,13 +146,22 @@
             assert.equal(window.mode, 'drag');
         }));
 
-/*
         $(test("Check merging 3 items lets one eat the other two", function(assert){
             alpha = $('#item13');
-            food1 = $('#item1');
-            food2 = $('#item2');
+            alpha_count = parseInt(alpha.find('.count').first().text());
+            food_1 = $('#item1');
+            food_1_count = parseInt(food_1.find('.count').first().text());
+            food_2 = $('#item2');
+            food_2_count = parseInt(food_2.find('.count').first().text());
+            count_sum = alpha_count + food_1_count + food_2_count;
+            alpha.find('button.merge').click();
+            $(food_1).click();
+            $(food_2).click();
+            $('#complete-merge').click();
+            alpha_count = parseInt(alpha.find('.count').first().text());
+            assert.equal(alpha_count, count_sum)
         }));
-        */
+
     </script>
 </body>
 </html>
