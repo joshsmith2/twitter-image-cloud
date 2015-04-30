@@ -32,6 +32,20 @@ class InputTest(GeneralTest):
         observed = main.remove_matching_braces(square_brackets)
         self.assertEqual("bumbag", observed)
 
+    def test_multiple_images_loaded_correctly(self):
+        multi_csv = os.path.join(self.files, 'urls_with_multiple_pics.csv')
+        response = main.get_urls_from_csv(multi_csv)
+        expected = [{'url': 'http://pbs.twimg.com/media/B869DjjCYAAnDg6.jpg',
+                     'count': 1,
+                     'share_text': "share"},
+                    {'url': 'http://pbs.twimg.com/media/B6c2wYAIUAAaoIA.jpg',
+                     'count': 1,
+                     'share_text': "share"},
+                    {'url': 'http://pbs.twimg.com/media/B6c1ulkCYAALNBV.jpg',
+                     'count': 1,
+                     'share_text': "share"}]
+        self.assertEqual(expected, response)
+
 class JinjaTests(GeneralTest):
 
     def test_can_render_test_template(self):
