@@ -91,5 +91,27 @@ class ImageTests(GeneralTest):
               '<img src="http://pbs.twimg.com/media/B4boCpyCEAExIYo.jpg">\n '
         self.assertIn(tag, rendered_stripped)
 
+class ListProcessingTask(GeneralTest):
+    def test_lists_can_be_combined(self):
+        urls = main.get_urls_from_csv(self.test_csv_in, 'media_urls')
+        extra_url = {'url': 'http://www.leekspin.jpg',
+                     'count': 89,
+                     'share_text': 'shares'}
+        urls_plus = urls
+        urls_plus.append(extra_url)
+        combined = main.combine_urls([urls, urls_plus])
+        expected_urls = [extra_url,
+            {'url': 'http://pbs.twimg.com/media/AoxQ3CECIAAsArF.jpg',
+            'count': 2,
+            'share_text': "shares"},
+            {'url': 'http://pbs.twimg.com/media/B2PlfAkCUAE0886.png',
+             'count': 2,
+            'share_text': "shares"},
+            {'url': 'http://pbs.twimg.com/media/B4boCpyCEAExIYo.jpg',
+             'count': 10,
+            'share_text': "shares"}]
+        for expected_url in expected_urls:
+            self.assertIn(expected_url, combined)
+
 if __name__ == '__main__':
      unittest.main()

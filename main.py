@@ -4,7 +4,7 @@ import os
 import argparse
 import csv
 import jinja2
-from collections import OrderedDict
+from multiprocessing import Pool
 
 SOURCE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
@@ -39,6 +39,72 @@ def remove_matching_braces(from_string):
                 debraced_string = from_string[1:-1]
     return debraced_string
 
+def get_urls(from_list, url_column_name='twitter.tweet/mediaUrls'):
+    results = []
+    list_urls = [l[url_column_name] for l in from_list]
+    debraced_urls = [remove_matching_braces(r) for r in list_urls if r]
+    for debraced_url in debraced_urls:
+        image_urls = debraced_url.split(', ')
+        for image_url in image_urls:
+            # Check for an existing result for this url
+            url_already_found = False
+            for result in results:
+                if result['url'] == image_url:
+                    current_count = result['count']
+                    result['count'] = current_count + 1
+                    result['share_text'] = "shares"
+                    url_already_found = True
+            if not url_already_found:
+                new_url = {}
+                new_url['url'] = image_url
+                new_url['count'] = 1
+                new_url['share_text'] = "share"
+                results.append(new_url)
+
+def get_urls(from_list):
+    results = []
+    for l in from_list:
+        image_urls = l.split(', ')
+        for image_url in image_urls:
+            # Check for an existing result for this url
+            url_already_found = False
+            for result in results:
+                if result['url'] == image_url:
+                    current_count = result['count']
+                    result['count'] = current_count + 1
+                    result['share_text'] = "shares"
+                    url_already_found = True
+            if not url_already_found:
+                new_url = {}
+                new_url['url'] = image_url
+                new_url['count'] = 1
+                new_url['share_text'] = "share"
+                results.append(new_url)
+    return results
+
+def combine_urls(url_lists):
+    """
+    Combine multiple lists of URLs into one - make counts add up etc
+
+    :param url_lists: List of lists of urls
+    :return: Combined list of urls
+    """
+    list_to_return = url_lists[0][:]
+    if len(url_lists) > 1:
+        for url_list in url_lists[1:]:
+            for url in url_list:
+                url_found = False
+                for l in list_to_return:
+                    if url['url'] == l['url']:
+                        new_count = l['count'] + url['count']
+                        l['count'] = new_count
+                        if new_count > 1:
+                            l['share_text'] = "shares"
+                        url_found = True
+                if not url_found:
+                    list_to_return.append(url)
+    return list_to_return
+
 def get_urls_from_csv(csv_file,
                       url_column_name='twitter.tweet/mediaUrls'):
     """
@@ -49,30 +115,13 @@ def get_urls_from_csv(csv_file,
     :param news_column_name: Name of column name containing relevance data
     :return dict in format {'url':url, 'relevant':bool, 'count':int}
     """
-    results = []
     if not os.path.exists(csv_file):
         raise OSError('Input file %s does not exist' % csv_file)
     with open(csv_file, 'r') as f:
         reader = csv.DictReader(f)
-        for row in reader:
-            debraced_urls = remove_matching_braces(row[url_column_name])
-            if debraced_urls: # Don't get tweets without images
-                image_urls = debraced_urls.split(', ')
-                for image_url in image_urls:
-                    # Check for an existing result for this url
-                    url_already_found = False
-                    for result in results:
-                        if result['url'] == image_url:
-                            current_count = result['count']
-                            result['count'] = current_count + 1
-                            result['share_text'] = "shares"
-                            url_already_found = True
-                    if not url_already_found:
-                        new_url = {}
-                        new_url['url'] = image_url
-                        new_url['count'] = 1
-                        new_url['share_text'] = "share"
-                        results.append(new_url)
+        list_urls = [l[url_column_name] for l in reader]
+    debraced_urls = [remove_matching_braces(r) for r in list_urls if r]
+    results = get_urls(debraced_urls)
     ordered_results = sorted(results, key=lambda r:r['count'], reverse=True)
     return ordered_results
 
