@@ -102,24 +102,48 @@ $(function() {
         } else {
             $('#merge-buttons').addClass('hidden');
             $('.packery-item').each(function () {
+                $(this).removeClass('merge-alpha');
                 $(this).removeClass('merge-candidate');
                 $(this).removeClass('merge-selected');
             });
         }
     };
 
-    bind_mode_change_to_merge_buttons = function(){
+    merge_images = function() {
+        return true;
+    };
+
+    var bind_mode_change_to_merge_buttons = function(packery_instance){
         $('button.merge').click(function(){
             if (window.mode != 'merge') {
                 change_window_mode('merge');
+                $(this).parent().removeClass('merge-candidate');
+                $(this).parent().addClass('merge-alpha');
             }else{
-                change_window_mode();
+                // If this is clicked on the alpha, cancel merge.
+                // Otherwise, switch new element to alpha
+                if ($(this).parent().hasClass('merge-alpha')){
+                    change_window_mode();
+                }else{
+                    $('.packery-item').each(function(){
+                        $(this).removeClass('merge-alpha');
+                    });
+                    $(this).parent().addClass('merge-alpha');
+                }
             }
         });
         $('#cancel-merge').click(function(){
             change_window_mode();
         });
         $('#complete-merge').click(function(){
+            var alpha_element = $('.merge-alpha').first();
+            var sum = 0;
+            sum += parseInt($(alpha_element).find('.count').text());
+            $('.merge-candidate').each(function(){
+                sum += parseInt($(this).find('.count').text());
+                packery_instance.remove($(this));
+            });
+            $(alpha_element).find('.count').text(sum.toString());
             change_window_mode();
         });
     };
@@ -153,8 +177,8 @@ $(function() {
     ResizeModule.make_items_pinnable = make_items_pinnable;
     ResizeModule.make_images_expandable = make_images_expandable;
     ResizeModule.change_window_mode = change_window_mode;
+    ResizeModule.bind_mode_change_to_merge_buttons = bind_mode_change_to_merge_buttons;
 
-    bind_mode_change_to_merge_buttons();
     bind_merge_mode_mouse_actions();
 });
 
@@ -167,14 +191,17 @@ $(document).ready(function(){
         itemSelector: packery_item_selector,
         gutter: 3
     });
-    // Remove the divs of any images which fail to lead from the DOM
+    // Remove the divs of any images which fail to load from the DOM
     $(".packery-item img").each(function(){
         $(this).error(function(){
             var _parent = $(this).parent();
             pckry.remove(_parent);
         });
     });
+
+    ResizeModule.bind_mode_change_to_merge_buttons(pckry);
     ResizeModule.make_images_expandable();
+
     ResizeModule.make_items_pinnable(pckry);
     ResizeModule.make_draggable(pckry);
     ResizeModule.repack(pckry);
