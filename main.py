@@ -8,7 +8,6 @@ from collections import OrderedDict
 
 SOURCE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
-
 def print_index(input_file, output_file='index.html', template='index.html',
                 url_media_column='twitter.tweet/mediaUrls'):
 
@@ -17,7 +16,6 @@ def print_index(input_file, output_file='index.html', template='index.html',
     rendered = template.render(twitter_images=urls)
     with open(output_file, 'w') as f:
         f.write(rendered)
-
 
 def load_template(template_name='index.html'):
     template_dir = os.path.join(SOURCE_ROOT, 'templates')
@@ -40,7 +38,6 @@ def remove_matching_braces(from_string):
             if from_string[0] == pair[0] and from_string[-1] == pair[1]:
                 debraced_string = from_string[1:-1]
     return debraced_string
-
 
 def get_urls_from_csv(csv_file,
                       url_column_name='twitter.tweet/mediaUrls'):

@@ -62,8 +62,8 @@ img{
 /* Merge mode */
 
 .merge-alpha {
-    border: 2px solid rgb(28, 201, 237);
-    margin: -2px; /*Stops element from moving */
+    border: 3px solid rgb(237, 15, 3);
+    margin: -3px; /*Stops element from moving */
 }
 
 .merge-candidate {

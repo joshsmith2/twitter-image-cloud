@@ -305,6 +305,16 @@
             assert.equal(alpha_count, count_sum)
         }));
 
+        $(test("Clicking on merge button doesn't add merge-selected", function(assert){
+            specimin = $('#item6');
+            assert.notOk($(specimin).hasClass('merge-selected'));
+            assert.notOk($(specimin).hasClass('merge-alpha'));
+            $(specimin).find('button.merge').click();
+            assert.notOk($(specimin).hasClass('merge-selected'));
+            assert.ok($(specimin).hasClass('merge-alpha'));
+            $(specimin).find('button.merge').click();
+        }));
+
     </script>
 </body>
 </html>

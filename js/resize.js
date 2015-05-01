@@ -139,12 +139,15 @@ $(function() {
             var alpha_element = $('.merge-alpha').first();
             var sum = 0;
             sum += parseInt($(alpha_element).find('.count').text());
-            $('.merge-candidate').each(function(){
-                sum += parseInt($(this).find('.count').text());
+            $('.merge-selected').each(function(){
+                var food_count = parseInt($(this).find('.count').text());
+                sum += food_count;
                 packery_instance.remove($(this));
             });
             $(alpha_element).find('.count').text(sum.toString());
             change_window_mode();
+            resize_divs();
+            repack(packery_instance);
         });
     };
 
@@ -157,12 +160,15 @@ $(function() {
         $('.packery-item').mouseleave(function(){
             $(this).removeClass('merge-candidate');
         });
-        $('.packery-item').click(function(){
+        $('.packery-item').click(function(event){
             if (window.mode == 'merge') {
                 if ($(this).hasClass('merge-selected')) {
                     $(this).removeClass('merge-selected');
                 } else {
-                    $(this).addClass('merge-selected');
+                    var merge_button = $(this).find('button.merge').get(0);
+                    if (event.target != merge_button){
+                        $(this).addClass('merge-selected');
+                    }
                 }
             }
         });
