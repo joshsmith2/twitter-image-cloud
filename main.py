@@ -121,7 +121,9 @@ def get_urls_from_csv(csv_file,
         reader = csv.DictReader(f)
         list_urls = [l[url_column_name] for l in reader]
     debraced_urls = [remove_matching_braces(r) for r in list_urls if r]
-    results = get_urls(debraced_urls)
+    thread_pool = Pool()
+    section_results = thread_pool.map(get_urls, [debraced_urls])
+    results = combine_urls(section_results)
     ordered_results = sorted(results, key=lambda r:r['count'], reverse=True)
     return ordered_results
 
