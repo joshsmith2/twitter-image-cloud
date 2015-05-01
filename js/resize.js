@@ -47,7 +47,7 @@ $(function() {
 
     var limit_visible = function(visible_imgs){
         // Set default value to 500, if none given
-        visible_imgs = typeof visible_imgs !== "undefined" ? visible_imgs : 300;
+        visible_imgs = typeof visible_imgs !== "undefined" ? visible_imgs : 1000;
         // This is the prefix we're using for the Packery items.
         prefix = 'item';
         $('.packery-item').each(function(){
