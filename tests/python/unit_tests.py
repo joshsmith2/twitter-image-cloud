@@ -63,6 +63,8 @@ class InputTest(GeneralTest):
 
 class SqliteTests(GeneralTest):
     def test_database_created_once(self):
+        self.assertFalse(os.path.exists(self.database))
+
         main.initialise_sqlite_database(self.database)
         conn = sqlite3.connect(self.database)
         cur = conn.cursor()
