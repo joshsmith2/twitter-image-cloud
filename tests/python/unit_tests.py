@@ -1,5 +1,6 @@
 from base import *
 import re
+import sqlite3
 
 class InputTest(GeneralTest):
 
@@ -59,6 +60,23 @@ class InputTest(GeneralTest):
         # Attempt to consume 20 more to get to the end - there are only 22 in total
         with self.assertRaises(StopIteration):
             main.get_chunk_from_csv_generator(_generator, 20)
+
+class SqliteTests(GeneralTest):
+    def test_database_created_once(self):
+        main.initialise_sqlite_database(self.database)
+        conn = sqlite3.connect(self.database)
+        cur = conn.cursor()
+        insert_row = "INSERT INTO images VALUES('a_url','5','string')"
+        cur.execute(insert_row) # shouldn't error
+        conn.commit()
+        # Check that insert worked
+        _line = cur.execute("SELECT * FROM images").fetchall()
+        self.assertEqual([('a_url', 5, 'string')], _line)
+
+        # Initialise database again, check that value's still there
+        main.initialise_sqlite_database(self.database)
+        _line = cur.execute("SELECT * FROM images").fetchall()
+        self.assertEqual([('a_url', 5, 'string')], _line)
 
 
 class JinjaTests(GeneralTest):

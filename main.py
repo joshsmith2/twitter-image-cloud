@@ -4,6 +4,7 @@ import os
 import argparse
 import csv
 import jinja2
+import sqlite3
 from multiprocessing import Pool
 
 SOURCE_ROOT = os.path.dirname(os.path.realpath(__file__))
@@ -25,6 +26,15 @@ def get_chunk_from_csv_generator(_generator, count):
         next_item = next(_generator)
         out_list.append(next_item)
     return out_list
+
+def initialise_sqlite_database(db_path):
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    create_statement = "CREATE TABLE IF NOT EXISTS images(" \
+                       "url TEXT," \
+                       "count INTEGER," \
+                       "share_text TEXT)"
+    cur.execute(create_statement)
 
 def print_index(input_file, output_file='index.html', template='index.html',
                 url_media_column='twitter.tweet/mediaUrls'):
