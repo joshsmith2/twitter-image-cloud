@@ -66,28 +66,6 @@ def remove_matching_braces(from_string):
                 debraced_string = from_string[1:-1]
     return debraced_string
 
-def get_urls(from_list, url_column_name='twitter.tweet/mediaUrls'):
-    results = []
-    list_urls = [l[url_column_name] for l in from_list]
-    debraced_urls = [remove_matching_braces(r) for r in list_urls if r]
-    for debraced_url in debraced_urls:
-        image_urls = debraced_url.split(', ')
-        for image_url in image_urls:
-            # Check for an existing result for this url
-            url_already_found = False
-            for result in results:
-                if result['url'] == image_url:
-                    current_count = result['count']
-                    result['count'] = current_count + 1
-                    result['share_text'] = "shares"
-                    url_already_found = True
-            if not url_already_found:
-                new_url = {}
-                new_url['url'] = image_url
-                new_url['count'] = 1
-                new_url['share_text'] = "share"
-                results.append(new_url)
-
 def get_urls(from_list):
     results = []
     for l in from_list:
