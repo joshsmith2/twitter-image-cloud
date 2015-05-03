@@ -8,9 +8,26 @@ from multiprocessing import Pool
 
 SOURCE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
+
+
+def get_lines_from_csv(from_file):
+    """
+    :return: A generator to enable grabbing chunks of files
+    """
+    with open(from_file, 'r') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            yield row
+
+def get_chunk_from_csv_generator(_generator, count):
+    out_list = []
+    for i in range(count):
+        next_item = next(_generator)
+        out_list.append(next_item)
+    return out_list
+
 def print_index(input_file, output_file='index.html', template='index.html',
                 url_media_column='twitter.tweet/mediaUrls'):
-
     urls = get_urls_from_csv(input_file, url_media_column)
     template = load_template(template)
     rendered = template.render(twitter_images=urls)
@@ -121,7 +138,7 @@ def get_urls_from_csv(csv_file,
         reader = csv.DictReader(f)
         list_urls = [l[url_column_name] for l in reader]
     debraced_urls = [remove_matching_braces(r) for r in list_urls if r]
-    thread_pool = Pool()
+    thread_pool = Pool(processes=2)
     section_results = thread_pool.map(get_urls, [debraced_urls])
     results = combine_urls(section_results)
     ordered_results = sorted(results, key=lambda r:r['count'], reverse=True)
