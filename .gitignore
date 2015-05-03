@@ -2,3 +2,5 @@
 *.swp
 *.pyc
 index.html
+._*
+.DS_Store

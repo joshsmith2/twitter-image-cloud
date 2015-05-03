@@ -46,6 +46,21 @@ class InputTest(GeneralTest):
                      'share_text': "share"}]
         self.assertEqual(expected, response)
 
+    def test_csv_generator_only_returns_n_elements_raises_stop_iteration(self):
+        _generator = main.get_lines_from_csv(self.test_csv_in)
+        first_5 = main.get_chunk_from_csv_generator(_generator, 5)
+        self.assertEqual(len(first_5), 5)
+        self.assertEqual("http://pbs.twimg.com/media/A4nysuNCQAERXAW.jpg", first_5[0]['media_urls'])
+        self.assertEqual("http://pbs.twimg.com/media/B05WaEVIQAA9JMu.jpg", first_5[-1]['media_urls'])
+
+        second_5 = main.get_chunk_from_csv_generator(_generator, 5)
+        self.assertEqual("http://pbs.twimg.com/media/B0nPH21IIAAeHiw.jpg", second_5[0]['media_urls'])
+
+        # Attempt to consume 20 more to get to the end - there are only 22 in total
+        with self.assertRaises(StopIteration):
+            main.get_chunk_from_csv_generator(_generator, 20)
+
+
 class JinjaTests(GeneralTest):
 
     def test_can_render_test_template(self):
