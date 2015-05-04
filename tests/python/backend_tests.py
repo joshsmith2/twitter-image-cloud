@@ -7,7 +7,7 @@ class InputTest(GeneralTest):
         silly_path = '/tmp/juj/hug/juj/hhh'
         self.assertFalse(os.path.exists(silly_path))
         with self.assertRaises(OSError):
-            main.get_urls_from_csv(silly_path)
+            main.get_lines_from_csv(silly_path)
 
     def test_can_get_urls_from_csv_file(self):
         response = main.get_urls_from_csv(self.test_csv_in, 'media_urls')
@@ -34,7 +34,8 @@ class InputTest(GeneralTest):
 
     def test_multiple_images_loaded_correctly(self):
         multi_csv = os.path.join(self.files, 'urls_with_multiple_pics.csv')
-        response = main.get_urls_from_csv(multi_csv)
+        csv_generator = main.get_lines_from_csv(multi_csv)
+        main.convert_csv_to_images(multi_csv, csv_generator)
         expected = [{'url': 'http://pbs.twimg.com/media/B869DjjCYAAnDg6.jpg',
                      'count': 1,
                      'share_text': "share"},
@@ -115,9 +116,14 @@ class SqliteTests(GeneralTest):
         self.assertEqual(sister_pic_expected, sister_pic_observed)
         self.assertEqual(penny_pic_expected, penny_pic_observed)
 
-        with self.assertRaises(StopIteration):
-            main.write_csv_chunk_to_database(self.database, _generator,
-                                             8, 'media_urls')
+        main.write_csv_chunk_to_database(self.database, _generator,
+                                         8, 'media_urls')
+        final_pic_url = 'http://pbs.twimg.com/media/777777777777777.png'
+        final_pic_expected = (final_pic_url, 1, 'share')
+        final_pic_observed = cur.execute("SELECT * FROM images WHERE url = '%s'"
+                                         % final_pic_url).fetchone()
+        self.assertEqual(final_pic_expected, final_pic_observed)
+
 class ListProcessingTask(GeneralTest):
     def test_lists_can_be_combined(self):
         urls = main.get_urls_from_csv(self.test_csv_in, 'media_urls')

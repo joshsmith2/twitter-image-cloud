@@ -28,12 +28,48 @@ def get_lines_from_csv(from_file):
         for row in reader:
             yield row
 
-def get_chunk_from_csv_generator(_generator, count):
-    out_list = []
-    for i in range(count):
-        next_item = next(_generator)
-        out_list.append(next_item)
-    return out_list
+def get_image_counts_from_csv_generator(_generator,
+                                        chunk_size=1000,
+                                        url_column_name='twitter.tweet/mediaUrls'):
+    image_chunk = []
+    end_of_file_found = False
+    for i in range(chunk_size):
+        try:
+            next_item = next(_generator)
+            image_chunk.append(next_item)
+        except StopIteration as e:
+            end_of_file_found = True
+    urls = [image[url_column_name] for image in image_chunk]
+    debraced_urls = [remove_matching_braces(u) for u in urls]
+    counts = get_url_counts(debraced_urls)
+    return (counts, end_of_file_found)
+
+def write_csv_chunk_to_database(db_path,
+                                csv_generator,
+                                chunk_size=1000,
+                                url_column_name='twitter.tweet/mediaUrls'):
+    from_generator = get_image_counts_from_csv_generator(csv_generator,
+                                                         chunk_size,
+                                                         url_column_name)
+    images = from_generator[0]
+    update_database(db_path, images)
+    return from_generator[1]
+    """
+    :return: Boolean, depending on whether file has ended
+    """
+
+def write_csv_file_to_database(csv_file,
+                               db_path,
+                               chunk_size=1000,
+                               url_column_name='twitter.tweet/mediaUrls'):
+    initialise_sqlite_database(db_path)
+    csv_generator = get_lines_from_csv(csv_file)
+    end_of_file_found = False
+    while end_of_file_found == False:
+        end_of_file_found = write_csv_chunk_to_database(db_path,
+                                                        csv_generator,
+                                                        chunk_size,
+                                                        url_column_name)
 
 def initialise_sqlite_database(db_path):
     conn = sqlite3.connect(db_path)
@@ -87,21 +123,11 @@ def update_database(db_path, images):
         cur.execute(insert_statement)
     conn.commit()
 
-def write_csv_chunk_to_database(db_path,
-                                csv_generator,
-                                chunk_size=1000,
-                                url_column_name='twitter.tweet/mediaUrls'):
-    image_chunk = get_chunk_from_csv_generator(csv_generator, chunk_size)
-    #Process output from csv
-    urls = [image[url_column_name] for image in image_chunk]
-    debraced_urls = [remove_matching_braces(u) for u in urls]
-    images_with_counts = get_url_counts(debraced_urls)
-    update_database(db_path, images_with_counts)
 
 def write_csv_file_to_database(
-        csv_generator,
-        chunk_size=1000,
-        url_column_name='twitter.tweet/mediaUrls'):
+    csv_generator,
+    chunk_size=1000,
+    url_column_name='twitter.tweet/mediaUrls'):
     pass
 
 def print_index(input_file, output_file='index.html', template='index.html',
