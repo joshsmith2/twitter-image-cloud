@@ -19,116 +19,103 @@ def get_arguments():
     return p.parse_args()
 
 
-def get_lines_from_csv(from_file):
+def get_lines_from_csv(csv_file):
     """
     :return: A generator to enable grabbing chunks of files
     """
-    with open(from_file, 'r') as f:
+    if not os.path.exists(csv_file):
+        raise OSError
+    with open(csv_file, 'r') as f:
         reader = csv.DictReader(f)
         for row in reader:
             yield row
 
-def get_image_counts_from_csv_generator(_generator,
-                                        chunk_size=1000,
-                                        url_column_name='twitter.tweet/mediaUrls'):
-    image_chunk = []
-    end_of_file_found = False
-    for i in range(chunk_size):
-        try:
-            next_item = next(_generator)
-            image_chunk.append(next_item)
-        except StopIteration as e:
-            end_of_file_found = True
-    urls = [image[url_column_name] for image in image_chunk]
-    debraced_urls = [remove_matching_braces(u) for u in urls]
-    counts = get_url_counts(debraced_urls)
-    return (counts, end_of_file_found)
+class ImageCloud:
 
-def write_csv_chunk_to_database(db_path,
-                                csv_generator,
-                                chunk_size=1000,
-                                url_column_name='twitter.tweet/mediaUrls'):
-    from_generator = get_image_counts_from_csv_generator(csv_generator,
-                                                         chunk_size,
-                                                         url_column_name)
-    images = from_generator[0]
-    update_database(db_path, images)
-    return from_generator[1]
-    """
-    :return: Boolean, depending on whether file has ended
-    """
+    def __init__(self, csv_file, db_path,
+                 url_column_name='twitter.tweet/mediaUrls', chunk_size=1000):
+        self.csv_file = os.path.abspath(csv_file)
+        self.db_path = os.path.abspath(db_path)
+        self.chunk_size = chunk_size
+        self.url_column_name = url_column_name
+        self.end_of_csv_file_found = False
+        self.csv_generator = get_lines_from_csv(self.csv_file)
 
-def write_csv_file_to_database(csv_file,
-                               db_path,
-                               chunk_size=1000,
-                               url_column_name='twitter.tweet/mediaUrls'):
-    initialise_sqlite_database(db_path)
-    csv_generator = get_lines_from_csv(csv_file)
-    end_of_file_found = False
-    while end_of_file_found == False:
-        end_of_file_found = write_csv_chunk_to_database(db_path,
-                                                        csv_generator,
-                                                        chunk_size,
-                                                        url_column_name)
+        # initialise_sqlite_database
+        conn = sqlite3.connect(self.db_path)
+        cur = conn.cursor()
+        create_statement = "CREATE TABLE IF NOT EXISTS images(" \
+                           "url TEXT UNIQUE," \
+                           "count INTEGER," \
+                           "share_text TEXT)"
+        cur.execute(create_statement)
+        conn.commit()
+        conn.close()
 
-def initialise_sqlite_database(db_path):
-    conn = sqlite3.connect(db_path)
-    cur = conn.cursor()
-    create_statement = "CREATE TABLE IF NOT EXISTS images(" \
-                       "url TEXT UNIQUE," \
-                       "count INTEGER," \
-                       "share_text TEXT)"
-    cur.execute(create_statement)
-    conn.commit()
-    conn.close()
 
-def update_database(db_path, images):
-    """
-    Take a list of images and update tohe database to reflect them
+    # The two functions below primarily split up to aid testing
+    def get_image_counts_from_csv_generator(self):
+        image_chunk = []
+        for i in range(self.chunk_size):
+            try:
+                next_item = next(self.csv_generator)
+                image_chunk.append(next_item)
+            except StopIteration as e:
+                self.end_of_csv_file_found = True
+        urls = [image[self.url_column_name] for image in image_chunk]
+        debraced_urls = [remove_matching_braces(u) for u in urls]
+        counts = get_url_counts(debraced_urls)
+        return counts
 
-    :param db_path: Path to database to update
-    :param images: List of image distionaries
-    """
-    conn = sqlite3.connect(db_path)
-    cur = conn.cursor()
-    images_to_insert = []
-    for image in images:
-        count_selector = "SELECT count FROM images WHERE url = '%s'" \
-                         % image['url']
-        current_count = cur.execute(count_selector).fetchone()
-        if current_count:
-            current_count = current_count[0]
-            # Image is present in database, so update it
-            new_count = current_count + image['count']
-            if current_count > 1:
-                update_statement = "UPDATE images " \
-                                   "SET count = '%i' " \
-                                   "WHERE url = '%s'" \
-                                   % (new_count, image['url'])
+    def write_csv_chunk_to_database(self):
+        images = self.get_image_counts_from_csv_generator()
+        self.update_database(images)
+
+    def write_csv_file_to_database(self):
+        csv_generator = self.get_lines_from_csv()
+        while self.end_of_file_found == False:
+            self.write_csv_chunk_to_database()
+
+    def update_database(self, images):
+        """
+        Take a list of images and update tohe database to reflect them
+
+        :param db_path: Path to database to update
+        :param images: List of image distionaries
+        """
+        conn = sqlite3.connect(self.db_path)
+        cur = conn.cursor()
+        images_to_insert = []
+        for image in images:
+            count_selector = "SELECT count FROM images WHERE url = '%s'" \
+                             % image['url']
+            current_count = cur.execute(count_selector).fetchone()
+            if current_count:
+                current_count = current_count[0]
+                # Image is present in database, so update it
+                new_count = current_count + image['count']
+                if current_count > 1:
+                    update_statement = "UPDATE images " \
+                                       "SET count = '%i' " \
+                                       "WHERE url = '%s'" \
+                                       % (new_count, image['url'])
+                else:
+                    update_statement = "UPDATE images " \
+                                       "SET count = '%i', " \
+                                       "share_text = 'shares'" \
+                                       "WHERE url = '%s'" \
+                                       % (new_count, image['url'])
+                cur.execute(update_statement)
             else:
-                update_statement = "UPDATE images " \
-                                   "SET count = '%i', " \
-                                   "share_text = 'shares'" \
-                                   "WHERE url = '%s'" \
-                                   % (new_count, image['url'])
-            cur.execute(update_statement)
-        else:
-            images_to_insert.append(image)
-    if images_to_insert:
-        insert_list = ["('%s','%s','%s')"
-                       % (i['url'],
-                          i['count'],
-                          i['share_text']) for i in images_to_insert]
-        insert_statement = "INSERT INTO images VALUES %s" % ','.join(insert_list)
-        cur.execute(insert_statement)
-    conn.commit()
-
-
-def write_csv_file_to_database(
-    csv_generator,
-    chunk_size=1000,
-    url_column_name='twitter.tweet/mediaUrls'):
-    pass
+                images_to_insert.append(image)
+        if images_to_insert:
+            insert_list = ["('%s','%s','%s')"
+                           % (i['url'],
+                              i['count'],
+                              i['share_text']) for i in images_to_insert]
+            insert_statement = "INSERT INTO images VALUES %s" % ','.join(insert_list)
+            cur.execute(insert_statement)
+        conn.commit()
 
 def print_index(input_file, output_file='index.html', template='index.html',
                 url_media_column='twitter.tweet/mediaUrls'):
@@ -187,6 +174,8 @@ def get_url_counts(from_list):
 def combine_urls(url_lists):
     """
     Combine multiple lists of URLs into one - make counts add up etc
+    This written for multiprocessing and may be used later whern I've proved
+    that I can speed things up with it.
 
     :param url_lists: List of lists of urls
     :return: Combined list of urls
