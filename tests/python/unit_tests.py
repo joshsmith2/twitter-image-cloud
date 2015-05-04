@@ -82,24 +82,41 @@ class SqliteTests(GeneralTest):
         self.assertEqual([('a_url', 5, 'string')], _line)
 
     def test_can_write_csv_chunks_to_database(self):
+        # Generator needs to be at top level.
+        # TODO: Make this an object of a class
+        _generator = main.get_lines_from_csv(self.test_csv_in)
         main.initialise_sqlite_database(self.database)
-        main.write_csv_chunk_to_database(self.test_csv_in, self.database, 8)
+        main.write_csv_chunk_to_database(self.database, _generator,
+                                         8, 'media_urls')
+        sister_pic_url = 'http://pbs.twimg.com/media/B0vMX4nCQAEK63o.jpg'
+        penny_pic_url = 'http://pbs.twimg.com/media/B2PlfAkCUAE0886.png'
         line_3 = ('http://pbs.twimg.com/media/Ajxb2c6CQAAzQTg.jpg', 1, 'share')
-        line_7 = ('http://pbs.twimg.com/media/B0vMX4nCQAEK63o.jpg', 2, 'shares')
+        sister_pic = (sister_pic_url, 2, 'shares')
+
         conn = sqlite3.connect(self.database)
         cur = conn.cursor()
         db_contents = cur.execute("SELECT * FROM images").fetchall()
+        self.assertEqual(len(db_contents), 7) # The number of unique URLs
         self.assertEqual(line_3, db_contents[2])
-        self.assertEqual(line_7, db_contents[-1])
+        self.assertEqual(sister_pic, db_contents[-1])
 
-        main.write_csv_chunk_to_database(self.test_csv_in, self.database, 8)
-        line_7_after_update = ('http://pbs.twimg.com/media/B0vMX4nCQAEK63o.jpg', 4, 'shares')
-        line_9_new_insert = ('http://pbs.twimg.com/media/B2PlfAkCUAE0886.png', 1, 'share')
-        self.assertEqual(line_7_after_update, db_contents[7])
-        self.assertEqual(line_9_new_insert, db_contents[9])
+        main.write_csv_chunk_to_database(self.database, _generator,
+                                         8, 'media_urls')
+        sister_pic_expected = (sister_pic_url,
+                               4, 'shares')
+        penny_pic_expected = (penny_pic_url, 1, 'share')
+        db_contents = cur.execute("SELECT * FROM images").fetchall()
+        self.assertEqual(len(db_contents), 10)
+        sister_pic_observed = cur.execute("SELECT * FROM images WHERE url = '%s'"
+                                          % sister_pic_url).fetchone()
+        penny_pic_observed = cur.execute("SELECT * FROM images WHERE url = '%s'"
+                                          % penny_pic_url).fetchone()
+        self.assertEqual(sister_pic_expected, sister_pic_observed)
+        self.assertEqual(penny_pic_expected, penny_pic_observed)
 
         with self.assertRaises(StopIteration):
-            main.write_csv_chunk_to_database(self.test_csv_in, self.database, 8)
+            main.write_csv_chunk_to_database(self.database, _generator,
+                                             8, 'media_urls')
 
 class JinjaTests(GeneralTest):
 

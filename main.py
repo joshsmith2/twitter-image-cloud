@@ -36,43 +36,46 @@ def initialise_sqlite_database(db_path):
     conn.commit()
     conn.close()
 
-def write_csv_chunk_to_database(csv_file, db_path, chunk_size=1000):
-    csv_generator = get_lines_from_csv(csv_file)
+def write_csv_chunk_to_database(db_path,
+                                csv_generator,
+                                chunk_size=1000,
+                                url_column_name='twitter.tweet/mediaUrls'):
     image_chunk = get_chunk_from_csv_generator(csv_generator, chunk_size)
+    #Process output from csv
+    urls = [image[url_column_name] for image in image_chunk]
+    debraced_urls = [remove_matching_braces(u) for u in urls]
+    images_with_counts = get_url_counts(debraced_urls)
+
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    urls_to_update = []
-    urls_to_insert = []
-    # Read database into list. Might have to change this tactic
-    # if we get low on memory
-    url_result = cur.execute('SELECT url FROM images').fetchall()
-    db_urls = [u[0] for u in url_result]
-    # Find out if this url is already in the database
-    for image in image_chunk:
-        if image['url'] in db_urls:
-            urls_to_update.append(image)
+    images_to_insert = []
+    for image in images_with_counts:
+        count_selector = "SELECT count FROM images WHERE url = '%s'" \
+                         % image['url']
+        current_count = cur.execute(count_selector).fetchone()
+        if current_count:
+            current_count = current_count[0]
+            # Image is present in database, so update it
+            new_count = current_count + image['count']
+            if current_count > 1:
+                update_statement = "UPDATE images " \
+                                   "SET count = '%i' " \
+                                   "WHERE url = '%s'" \
+                                   % (new_count, image['url'])
+            else:
+                update_statement = "UPDATE images " \
+                                   "SET count = '%i', " \
+                                   "share_text = 'shares'" \
+                                   "WHERE url = '%s'" \
+                                   % (new_count, image['url'])
+            cur.execute(update_statement)
         else:
-            urls_to_insert.append(image)
-    for u in urls_to_update:
-        count_selector = "SELECT count FROM images WHERE url = %s" % url['url']
-        current_count = cur.execute(count_selector)
-        new_count = current_count + url['count']
-        if current_count > 1:
-            update_statement = "UPDATE images " \
-                               "SET count = %i " \
-                               "WHERE url = %s" \
-                               % (url['count'], url['url'])
-        else:
-            update_statement = "UPDATE images " \
-                               "SET count = %i, " \
-                               "share_text = 'shares'" \
-                               "WHERE url = %s" \
-                               % (url['count'], url['url'])
-        cur.execute(update_statement)
-    if urls_to_insert:
-        insert_list = ["(%s,%s,%s)" % (u['url'],
-                                       u['count'],
-                                       u['share_text']) for u in urls_to_insert]
+            images_to_insert.append(image)
+    if images_to_insert:
+        insert_list = ["('%s','%s','%s')"
+                       % (i['url'],
+                          i['count'],
+                          i['share_text']) for i in images_to_insert]
         insert_statement = "INSERT INTO images VALUES %s" % ','.join(insert_list)
         cur.execute(insert_statement)
     conn.commit()
@@ -110,7 +113,16 @@ def remove_matching_braces(from_string):
                 debraced_string = from_string[1:-1]
     return debraced_string
 
-def get_urls(from_list):
+def get_url_counts(from_list):
+    """
+    Given a list of urls, count each one and return an object
+    containing this count
+
+    :param from_list: List of urls harvested from csv column,
+        without brackets
+    :return: List of dictionaries containing url, count and 'share
+        text' info (this last to be removed very soon)
+    """
     results = []
     for l in from_list:
         image_urls = l.split(', ')
@@ -175,9 +187,6 @@ def get_urls_from_csv(csv_file,
     results = combine_urls(section_results)
     ordered_results = sorted(results, key=lambda r:r['count'], reverse=True)
     return ordered_results
-
-def create_database(db_path, csv_file, url_column_name='twitter.tweet/mediaUrls'):
-    pass
 
 def main():
     get_arguments()
