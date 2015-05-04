@@ -72,8 +72,7 @@ class ImageCloud:
         self.update_database(images)
 
     def write_csv_file_to_database(self):
-        csv_generator = self.get_lines_from_csv()
-        while self.end_of_file_found == False:
+        while not self.end_of_csv_file_found:
             self.write_csv_chunk_to_database()
 
     def update_database(self, images):
