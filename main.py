@@ -9,8 +9,6 @@ from multiprocessing import Pool
 
 SOURCE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
-
-
 def get_lines_from_csv(from_file):
     """
     :return: A generator to enable grabbing chunks of files
@@ -31,10 +29,56 @@ def initialise_sqlite_database(db_path):
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     create_statement = "CREATE TABLE IF NOT EXISTS images(" \
-                       "url TEXT," \
+                       "url TEXT UNIQUE," \
                        "count INTEGER," \
                        "share_text TEXT)"
     cur.execute(create_statement)
+    conn.commit()
+    conn.close()
+
+def write_csv_chunk_to_database(csv_file, db_path, chunk_size=1000):
+    csv_generator = get_lines_from_csv(csv_file)
+    image_chunk = get_chunk_from_csv_generator(csv_generator, chunk_size)
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    urls_to_update = []
+    urls_to_insert = []
+    # Read database into list. Might have to change this tactic
+    # if we get low on memory
+    url_result = cur.execute('SELECT url FROM images').fetchall()
+    db_urls = [u[0] for u in url_result]
+    # Find out if this url is already in the database
+    for image in image_chunk:
+        if image['url'] in db_urls:
+            urls_to_update.append(image)
+        else:
+            urls_to_insert.append(image)
+    for u in urls_to_update:
+        count_selector = "SELECT count FROM images WHERE url = %s" % url['url']
+        current_count = cur.execute(count_selector)
+        new_count = current_count + url['count']
+        if current_count > 1:
+            update_statement = "UPDATE images " \
+                               "SET count = %i " \
+                               "WHERE url = %s" \
+                               % (url['count'], url['url'])
+        else:
+            update_statement = "UPDATE images " \
+                               "SET count = %i, " \
+                               "share_text = 'shares'" \
+                               "WHERE url = %s" \
+                               % (url['count'], url['url'])
+        cur.execute(update_statement)
+    if urls_to_insert:
+        insert_list = ["(%s,%s,%s)" % (u['url'],
+                                       u['count'],
+                                       u['share_text']) for u in urls_to_insert]
+        insert_statement = "INSERT INTO images VALUES %s" % ','.join(insert_list)
+        cur.execute(insert_statement)
+    conn.commit()
+
+
+## DB SPIKE ENDS HERE
 
 def print_index(input_file, output_file='index.html', template='index.html',
                 url_media_column='twitter.tweet/mediaUrls'):
@@ -131,6 +175,9 @@ def get_urls_from_csv(csv_file,
     results = combine_urls(section_results)
     ordered_results = sorted(results, key=lambda r:r['count'], reverse=True)
     return ordered_results
+
+def create_database(db_path, csv_file, url_column_name='twitter.tweet/mediaUrls'):
+    pass
 
 def main():
     get_arguments()

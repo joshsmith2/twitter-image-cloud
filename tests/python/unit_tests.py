@@ -62,6 +62,7 @@ class InputTest(GeneralTest):
             main.get_chunk_from_csv_generator(_generator, 20)
 
 class SqliteTests(GeneralTest):
+
     def test_database_created_once(self):
         self.assertFalse(os.path.exists(self.database))
 
@@ -72,14 +73,33 @@ class SqliteTests(GeneralTest):
         cur.execute(insert_row) # shouldn't error
         conn.commit()
         # Check that insert worked
-        _line = cur.execute("SELECT * FROM images").fetchall()
-        self.assertEqual([('a_url', 5, 'string')], _line)
+        all_results = cur.execute("SELECT * FROM images").fetchall()
+        self.assertEqual([('a_url', 5, 'string')], all_results)
 
         # Initialise database again, check that value's still there
         main.initialise_sqlite_database(self.database)
         _line = cur.execute("SELECT * FROM images").fetchall()
         self.assertEqual([('a_url', 5, 'string')], _line)
 
+    def test_can_write_csv_chunks_to_database(self):
+        main.initialise_sqlite_database(self.database)
+        main.write_csv_chunk_to_database(self.test_csv_in, self.database, 8)
+        line_3 = ('http://pbs.twimg.com/media/Ajxb2c6CQAAzQTg.jpg', 1, 'share')
+        line_7 = ('http://pbs.twimg.com/media/B0vMX4nCQAEK63o.jpg', 2, 'shares')
+        conn = sqlite3.connect(self.database)
+        cur = conn.cursor()
+        db_contents = cur.execute("SELECT * FROM images").fetchall()
+        self.assertEqual(line_3, db_contents[2])
+        self.assertEqual(line_7, db_contents[-1])
+
+        main.write_csv_chunk_to_database(self.test_csv_in, self.database, 8)
+        line_7_after_update = ('http://pbs.twimg.com/media/B0vMX4nCQAEK63o.jpg', 4, 'shares')
+        line_9_new_insert = ('http://pbs.twimg.com/media/B2PlfAkCUAE0886.png', 1, 'share')
+        self.assertEqual(line_7_after_update, db_contents[7])
+        self.assertEqual(line_9_new_insert, db_contents[9])
+
+        with self.assertRaises(StopIteration):
+            main.write_csv_chunk_to_database(self.test_csv_in, self.database, 8)
 
 class JinjaTests(GeneralTest):
 
