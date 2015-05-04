@@ -1,5 +1,4 @@
 from base import *
-import re
 import sqlite3
 
 class InputTest(GeneralTest):
@@ -61,6 +60,8 @@ class InputTest(GeneralTest):
         with self.assertRaises(StopIteration):
             main.get_chunk_from_csv_generator(_generator, 20)
 
+
+
 class SqliteTests(GeneralTest):
 
     def test_database_created_once(self):
@@ -117,52 +118,6 @@ class SqliteTests(GeneralTest):
         with self.assertRaises(StopIteration):
             main.write_csv_chunk_to_database(self.database, _generator,
                                              8, 'media_urls')
-
-class JinjaTests(GeneralTest):
-
-    def test_can_render_test_template(self):
-        test_template = main.load_template('test.html')
-        rendered = test_template.render(worked_goes_here = 'worked')
-        self.assertIn("<h1>This has worked</h1>", rendered)
-
-    def test_can_render_loops(self):
-        loop_template = main.load_template('loop_test.html')
-        felonies = ['pig', 'hog', 'brine']
-        rendered = loop_template.render(book=felonies)
-        for crime in felonies:
-            self.assertIn('<h1>I got %s felonies</h1>' % crime, rendered)
-
-
-class ImageTests(GeneralTest):
-
-    def test_images_end_up_on_the_page(self):
-        urls = main.get_urls_from_csv(self.test_csv_in, 'media_urls')
-        index_template = main.load_template()
-        rendered = index_template.render(twitter_images=urls)
-        tag = '<img src="http://pbs.twimg.com/media/B51oL3fIcAA9j9L.png">'
-        self.assertIn(tag, rendered)
-
-    def test_counts_get_there_too(self):
-        urls = main.get_urls_from_csv(self.test_csv_in, 'media_urls')
-        index_template = main.load_template()
-        rendered = index_template.render(twitter_images=urls)
-        tag = '<img src="http://pbs.twimg.com/media/B4boCpyCEAExIYo.jpg">\n ' \
-              '<button class="merge">Merge</button>\n ' \
-              '<div class="image-footer">\n '\
-              '<div class="share-count">\n ' \
-              '<span class="count">5</span> shares'
-        rendered_stripped = re.sub(r' +', ' ', rendered)
-        self.assertIn(tag, rendered_stripped)
-
-    def test_images_idd_by_rank(self):
-        urls = main.get_urls_from_csv(self.test_csv_in, 'media_urls')
-        index_template = main.load_template()
-        rendered = index_template.render(twitter_images=urls)
-        rendered_stripped = re.sub(r' +', ' ', rendered)
-        tag = '<div id="item1" class="packery-item">\n ' \
-              '<img src="http://pbs.twimg.com/media/B4boCpyCEAExIYo.jpg">\n '
-        self.assertIn(tag, rendered_stripped)
-
 class ListProcessingTask(GeneralTest):
     def test_lists_can_be_combined(self):
         urls = main.get_urls_from_csv(self.test_csv_in, 'media_urls')
@@ -184,6 +139,3 @@ class ListProcessingTask(GeneralTest):
             'share_text': "shares"}]
         for expected_url in expected_urls:
             self.assertIn(expected_url, combined)
-
-if __name__ == '__main__':
-     unittest.main()

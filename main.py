@@ -7,7 +7,17 @@ import jinja2
 import sqlite3
 from multiprocessing import Pool
 
+#TODO: CLASSES! Get this rabble in shape.
+
 SOURCE_ROOT = os.path.dirname(os.path.realpath(__file__))
+
+def get_arguments():
+    p = argparse.ArgumentParser()
+    p.add_argument('-i', '--input-csv', metavar='PATH', dest='input_csv',
+                   help='CSV file containing urls to images')
+    p.add_argument('-o' '--output-file', metavar='PATH', dest='output_file')
+    return p.parse_args()
+
 
 def get_lines_from_csv(from_file):
     """
@@ -36,20 +46,17 @@ def initialise_sqlite_database(db_path):
     conn.commit()
     conn.close()
 
-def write_csv_chunk_to_database(db_path,
-                                csv_generator,
-                                chunk_size=1000,
-                                url_column_name='twitter.tweet/mediaUrls'):
-    image_chunk = get_chunk_from_csv_generator(csv_generator, chunk_size)
-    #Process output from csv
-    urls = [image[url_column_name] for image in image_chunk]
-    debraced_urls = [remove_matching_braces(u) for u in urls]
-    images_with_counts = get_url_counts(debraced_urls)
+def update_database(db_path, images):
+    """
+    Take a list of images and update tohe database to reflect them
 
+    :param db_path: Path to database to update
+    :param images: List of image distionaries
+    """
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     images_to_insert = []
-    for image in images_with_counts:
+    for image in images:
         count_selector = "SELECT count FROM images WHERE url = '%s'" \
                          % image['url']
         current_count = cur.execute(count_selector).fetchone()
@@ -80,8 +87,22 @@ def write_csv_chunk_to_database(db_path,
         cur.execute(insert_statement)
     conn.commit()
 
+def write_csv_chunk_to_database(db_path,
+                                csv_generator,
+                                chunk_size=1000,
+                                url_column_name='twitter.tweet/mediaUrls'):
+    image_chunk = get_chunk_from_csv_generator(csv_generator, chunk_size)
+    #Process output from csv
+    urls = [image[url_column_name] for image in image_chunk]
+    debraced_urls = [remove_matching_braces(u) for u in urls]
+    images_with_counts = get_url_counts(debraced_urls)
+    update_database(db_path, images_with_counts)
 
-## DB SPIKE ENDS HERE
+def write_csv_file_to_database(
+        csv_generator,
+        chunk_size=1000,
+        url_column_name='twitter.tweet/mediaUrls'):
+    pass
 
 def print_index(input_file, output_file='index.html', template='index.html',
                 url_media_column='twitter.tweet/mediaUrls'):
@@ -97,12 +118,6 @@ def load_template(template_name='index.html'):
     env = jinja2.Environment(loader=loader)
     return env.get_template(template_name)
 
-def get_arguments():
-    p = argparse.ArgumentParser()
-    p.add_argument('-i', '--input-csv', metavar='PATH', dest='input_csv',
-                   help='CSV file containing urls to images')
-    p.add_argument('-o' '--output-file', metavar='PATH', dest='output_file')
-    return p.parse_args()
 
 def remove_matching_braces(from_string):
     braces = [('[', ']'), ('{','}'), ('(', ')')]
@@ -166,27 +181,6 @@ def combine_urls(url_lists):
                     list_to_return.append(url)
     return list_to_return
 
-def get_urls_from_csv(csv_file,
-                      url_column_name='twitter.tweet/mediaUrls'):
-    """
-    Return a list of image paths, given a csv file
-
-    :param csv_file: Path to csv file to get paths from
-    :param url_column_name: Name of column containing urls
-    :param news_column_name: Name of column name containing relevance data
-    :return dict in format {'url':url, 'relevant':bool, 'count':int}
-    """
-    if not os.path.exists(csv_file):
-        raise OSError('Input file %s does not exist' % csv_file)
-    with open(csv_file, 'r') as f:
-        reader = csv.DictReader(f)
-        list_urls = [l[url_column_name] for l in reader]
-    debraced_urls = [remove_matching_braces(r) for r in list_urls if r]
-    thread_pool = Pool(processes=2)
-    section_results = thread_pool.map(get_urls, [debraced_urls])
-    results = combine_urls(section_results)
-    ordered_results = sorted(results, key=lambda r:r['count'], reverse=True)
-    return ordered_results
 
 def main():
     get_arguments()
