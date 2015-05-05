@@ -33,13 +33,18 @@ def get_lines_from_csv(csv_file):
 class ImageCloud:
 
     def __init__(self, csv_file, db_path,
-                 url_column_name='twitter.tweet/mediaUrls', chunk_size=1000):
+                 url_column_name='twitter.tweet/mediaUrls',
+                 html_output_file='./images.html',
+                 chunk_size=1000,
+                 image_limit=2000):
         self.csv_file = os.path.abspath(csv_file)
         self.db_path = os.path.abspath(db_path)
         self.chunk_size = chunk_size
         self.url_column_name = url_column_name
         self.end_of_csv_file_found = False
         self.csv_generator = get_lines_from_csv(self.csv_file)
+        self.image_limit = image_limit
+        self.html_output_file = os.path.abspath(html_output_file)
 
         # initialise_sqlite_database
         conn = sqlite3.connect(self.db_path)
@@ -67,17 +72,9 @@ class ImageCloud:
         counts = get_url_counts(debraced_urls)
         return counts
 
-    def write_csv_chunk_to_database(self):
-        images = self.get_image_counts_from_csv_generator()
-        self.update_database(images)
-
-    def write_csv_file_to_database(self):
-        while not self.end_of_csv_file_found:
-            self.write_csv_chunk_to_database()
-
     def update_database(self, images):
         """
-        Take a list of images and update tohe database to reflect them
+        Take a list of images and update the database to reflect them
 
         :param db_path: Path to database to update
         :param images: List of image distionaries
@@ -116,20 +113,39 @@ class ImageCloud:
             cur.execute(insert_statement)
         conn.commit()
 
-def print_index(input_file, output_file='index.html', template='index.html',
-                url_media_column='twitter.tweet/mediaUrls'):
-    urls = get_urls_from_csv(input_file, url_media_column)
-    template = load_template(template)
-    rendered = template.render(twitter_images=urls)
-    with open(output_file, 'w') as f:
-        f.write(rendered)
+    def write_csv_chunk_to_database(self):
+        images = self.get_image_counts_from_csv_generator()
+        self.update_database(images)
+
+    def write_csv_file_to_database(self):
+        while not self.end_of_csv_file_found:
+            self.write_csv_chunk_to_database()
+
+    def get_images_from_database(self):
+        """
+        :param limit: How many rows to return
+        :return: A sqlite3 row object
+        """
+        conn = sqlite3.connect(self.db_path)
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        select = "SELECT * FROM images ORDER BY count DESC LIMIT %i" \
+                 % self.image_limit
+        images = cur.execute(select).fetchall()
+        return images
+
+    def print_images(self):
+        images = self.get_images_from_database()
+        template = load_template('index.html')
+        rendered = template.render(twitter_images=images)
+        with open(self.html_output_file, 'w') as f:
+            f.write(rendered)
 
 def load_template(template_name='index.html'):
     template_dir = os.path.join(SOURCE_ROOT, 'templates')
     loader = jinja2.FileSystemLoader(searchpath=template_dir)
     env = jinja2.Environment(loader=loader)
     return env.get_template(template_name)
-
 
 def remove_matching_braces(from_string):
     braces = [('[', ']'), ('{','}'), ('(', ')')]
