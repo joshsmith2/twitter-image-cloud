@@ -4,3 +4,4 @@
 index.html
 ._*
 .DS_Store
+tests/python/files/test_db.db

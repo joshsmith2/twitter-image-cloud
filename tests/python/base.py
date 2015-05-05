@@ -20,9 +20,12 @@ class GeneralTest(unittest.TestCase):
         self.files = os.path.join(self.current_dir, 'files')
         self.test_csv_in = os.path.join(self.files, 'twitter_sample.csv')
         self.test_index = os.path.join(self.base_dir, 'index.html')
+        self.database = os.path.join(self.files, 'test_db.db')
 
-        if os.path.exists(self.test_index):
-            os.remove(self.test_index)
+        files_to_clean_up = [self.test_index, self.database]
+        for f in files_to_clean_up:
+            if os.path.exists(f):
+                os.remove(f)
 
     def tearDown(self):
         pass
