@@ -38,15 +38,17 @@ class DatabaseTests(GeneralTest):
         result = self.cloud.get_images_from_database()
         self.assertEqual(len(result), 2)
 
-class JinjaTests(GeneralTest):
+class JinjaTests(DatabaseTests):
 
     def test_can_render_test_template(self):
-        test_template = main.load_template('test.html')
+        self.cloud.html_template = 'test.html'
+        test_template = self.cloud.load_template()
         rendered = test_template.render(worked_goes_here = 'worked')
         self.assertIn("<h1>This has worked</h1>", rendered)
 
     def test_can_render_loops(self):
-        loop_template = main.load_template('loop_test.html')
+        self.cloud.html_template = 'loop_test.html'
+        loop_template = self.cloud.load_template()
         felonies = ['pig', 'hog', 'brine']
         rendered = loop_template.render(book=felonies)
         for crime in felonies:
@@ -56,14 +58,14 @@ class ImageTests(DatabaseTests):
 
     def test_images_end_up_on_the_page(self):
         images = self.cloud.get_images_from_database()
-        index_template = main.load_template()
+        index_template = self.cloud.load_template()
         rendered = index_template.render(twitter_images=images)
         tag = '<img src="http://pbs.twimg.com/media/B51oL3fIcAA9j9L.png">'
         self.assertIn(tag, rendered)
 
     def test_counts_get_there_too(self):
         images = self.cloud.get_images_from_database()
-        index_template = main.load_template()
+        index_template = self.cloud.load_template()
         rendered = index_template.render(twitter_images=images)
         tag = '<img src="http://pbs.twimg.com/media/B4boCpyCEAExIYo.jpg">\n ' \
               '<button class="merge">Merge</button>\n ' \
@@ -75,7 +77,7 @@ class ImageTests(DatabaseTests):
 
     def test_images_idd_by_rank(self):
         images = self.cloud.get_images_from_database()
-        index_template = main.load_template()
+        index_template = self.cloud.load_template()
         rendered = index_template.render(twitter_images=images)
         rendered_stripped = re.sub(r' +', ' ', rendered)
         tag = '<div id="item1" class="packery-item">\n ' \
