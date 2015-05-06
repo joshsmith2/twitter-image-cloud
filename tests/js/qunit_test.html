@@ -18,6 +18,12 @@
     <div id="qunit-fixture"></div>
 
     <div id="container">
+        <button id="open-main-buttons" class="hidden">Main menu</button>
+        <div id="main-buttons" class="hidden">
+            <button class="close">X</button>
+            <button id="drop-curtain">Drop curtain</button>
+        </div>
+
     
         <div id="item1" class="packery-item">
             <img src="http://pbs.twimg.com/media/B4boCpyCEAExIYo.jpg">
@@ -198,13 +204,7 @@
             assert.ok($('#item1').width() > 40)
         }));
 
-/*        $(test("404'd images never rendered", function(assert){
-            if ($('#item14').length){
-                assert.ok(false);
-            }else{
-                assert.ok(true);
-            }
-        }));*/
+
 
         $(test("Only n divs visible", function(assert){
             var visible = 4;
@@ -248,6 +248,24 @@
                }
            });
         }));
+
+        $(test("Check main buttons hidden, appear on mouseover, open on click", function(assert){
+            var main_menu_button = $('#open-main-menu');
+            var main_menu = $('#main-menu');
+            var close_button = $(main_menu).find('button.close');
+
+            assert.notOk($(main_menu_button).is(":visible"));
+            $(main_menu_button).mouseover();
+            assert.ok($(main_menu_button).is(":visible"));
+
+            assert.notOk($(main_menu).is(":visible"));
+            $(main_menu_button).click();
+            assert.ok($(main_menu).is(":visible"));
+
+            $(close_button).click();
+            assert.notOk($(main_menu).is(":visible"));
+        }));
+
 
     </script>
 </body>

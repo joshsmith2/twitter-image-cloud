@@ -50,7 +50,6 @@ img{
     bottom: -37px;
     background-color: #FFF;
     color: #000;
-
     display: none;
 }
 
@@ -83,13 +82,14 @@ button.merge{
     display: none;
     font-family: 'Lato', sans-serif;
     font-weight: 300;
-    padding: 5px 10px;
-    border: 1px solid black;
+    padding: 3px 18px;
+    border: 1px solid #3b3b3b;
     background-color: #FFF;
 }
 
 .expanded button.merge{
     display: block;
+    color: black;
 }
 
 #merge-buttons{
@@ -99,7 +99,7 @@ button.merge{
     z-index: 200;
 }
 
-#merge-buttons button{
+button{
     border: none;
     margin-left: 5px;
     padding: 5px 30px;
@@ -115,6 +115,11 @@ button.merge{
 
 #complete-merge{
     background-color: #008000;
+}
+
+/* Main menu */
+#main-menu{
+    backgound-color: rgba(255,255,255,0.6);
 }
 
 

@@ -16,7 +16,12 @@
 </head>
 <body>
     <div id="container">
-    {% for twitter_image in twitter_images %}
+        <button id="open-main-buttons" class="hidden">Main menu</button>
+        <div id="main-buttons" class="hidden">
+            <button class="close">X</button>
+            <button id="drop-curtain">Drop curtain</button>
+        </div>
+        {% for twitter_image in twitter_images %}
         <div id="item{{ loop.index }}" class="packery-item">
             <img src="{{ twitter_image.url }}">
             <button class="merge">Merge</button>
