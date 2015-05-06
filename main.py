@@ -35,6 +35,7 @@ class ImageCloud:
     def __init__(self, csv_file, db_path,
                  url_column_name='twitter.tweet/mediaUrls',
                  html_output_file='./images.html',
+                 html_template = 'index.html',
                  chunk_size=1000,
                  image_limit=2000):
         self.csv_file = os.path.abspath(csv_file)
@@ -45,6 +46,7 @@ class ImageCloud:
         self.csv_generator = get_lines_from_csv(self.csv_file)
         self.image_limit = image_limit
         self.html_output_file = os.path.abspath(html_output_file)
+        self.html_template = html_template
 
         # initialise_sqlite_database
         conn = sqlite3.connect(self.db_path)
@@ -136,16 +138,16 @@ class ImageCloud:
 
     def print_images(self):
         images = self.get_images_from_database()
-        template = load_template('index.html')
+        template = self.load_template()
         rendered = template.render(twitter_images=images)
         with open(self.html_output_file, 'w') as f:
             f.write(rendered)
 
-def load_template(template_name='index.html'):
-    template_dir = os.path.join(SOURCE_ROOT, 'templates')
-    loader = jinja2.FileSystemLoader(searchpath=template_dir)
-    env = jinja2.Environment(loader=loader)
-    return env.get_template(template_name)
+    def load_template(self):
+        template_dir = os.path.join(SOURCE_ROOT, 'templates')
+        loader = jinja2.FileSystemLoader(searchpath=template_dir)
+        env = jinja2.Environment(loader=loader)
+        return env.get_template(self.html_template)
 
 def remove_matching_braces(from_string):
     braces = [('[', ']'), ('{','}'), ('(', ')')]

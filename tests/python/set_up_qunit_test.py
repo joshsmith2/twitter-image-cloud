@@ -11,12 +11,18 @@ except ImportError:
 current_dir = os.path.dirname(os.path.abspath(__file__))
 files = os.path.join(current_dir, 'files')
 tests = os.path.dirname(current_dir)
+db_path = os.path.join(files, 'js_test_out.db')
 test_csv_in = os.path.join(files, 'twitter_sample.csv')
-js_test_file = os.path.join(tests, 'js', 'qunit_test.html')
+
+qunit_test_file = os.path.join(tests, 'js', 'qunit_test.html')
 merge_test_file = os.path.join(tests, 'js', 'merge_tests.html')
-main.print_index(test_csv_in, js_test_file,
-                 template='qunit_test.html',
-                 url_media_column='media_urls')
-main.print_index(test_csv_in, merge_test_file,
-                 template='merge_tests.html',
-                 url_media_column='media_urls')
+merge_template = 'merge_tests.html'
+
+cloud = main.ImageCloud(test_csv_in, db_path,
+                        url_column_name='media_urls',
+                        html_template='qunit_test.html',
+                        html_output_file=qunit_test_file)
+cloud.print_images()
+cloud.html_template = 'merge_tests.html'
+cloud.html_output_file = merge_test_file
+cloud.print_images()
