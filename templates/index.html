@@ -16,11 +16,6 @@
 </head>
 <body>
     <div id="container">
-        <button id="open-main-buttons" class="hidden">Main menu</button>
-        <div id="main-buttons" class="hidden">
-            <button class="close">X</button>
-            <button id="drop-curtain">Drop curtain</button>
-        </div>
         {% for twitter_image in twitter_images %}
         <div id="item{{ loop.index }}" class="packery-item">
             <img src="{{ twitter_image.url }}">
@@ -36,6 +31,11 @@
         <div id="merge-buttons" class="hidden">
             <button id="cancel-merge">Cancel merge</button>
             <button id="complete-merge">Merge</button>
+        </div>
+        <button id="open-main-menu">Main menu</button>
+        <div id="main-menu" class="hidden">
+            <button class="close">X</button>
+            <button id="drop-curtain">Drop curtain</button>
         </div>
     </div>
 </body>

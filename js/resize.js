@@ -174,6 +174,21 @@ $(function() {
         });
     };
 
+    // MAIN MENU
+    bind_main_menu_actions = function(){
+        var main_menu_button = $('#open-main-menu');
+        var main_menu = $('#main-menu');
+        $(main_menu_button).click(function(){
+            $(this).addClass('hidden');
+            $(main_menu).removeClass('hidden');
+        });
+        $(main_menu).find('.close').first().click(function(){
+            $(main_menu).addClass('hidden');
+            $(main_menu_button).removeClass('hidden');
+        });
+    };
+
+
     // Return functions for use in unit tests as well as on doc load
     ResizeModule.resize_divs = resize_divs;
     ResizeModule.get_max_count = get_max_count;
@@ -186,6 +201,7 @@ $(function() {
     ResizeModule.bind_mode_change_to_merge_buttons = bind_mode_change_to_merge_buttons;
 
     bind_merge_mode_mouse_actions();
+    bind_main_menu_actions();
 });
 
 $(document).ready(function(){

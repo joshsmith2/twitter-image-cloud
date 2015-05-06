@@ -118,9 +118,31 @@ button{
 }
 
 /* Main menu */
-#main-menu{
-    backgound-color: rgba(255,255,255,0.6);
+#open-main-menu, #main-menu{
+    z-index: 200;
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    color: #000;
 }
 
+#main-menu{
+    background-color: #FFF;
+    width: 240px;
+    padding: 8px;
+}
 
+#main-menu button{
+    background-color: #B6B6B6;
+    color: #000;
+}
+
+#main-menu button.close{
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    color: #000;
+    background-color: #FFF;
+    padding: 3px;
+}
 
