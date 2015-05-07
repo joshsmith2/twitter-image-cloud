@@ -86,16 +86,21 @@ img{
     margin: -2px;
 }
 
-button.merge{
+.image-buttons{
     position: absolute;
     top: 10px;
     left: 10px;
+    width: 30px;
+}
+
+.image-buttons button{
     font-family: 'Lato', sans-serif;
     font-weight: 300;
     padding: 3px 18px;
     border: 1px solid #3b3b3b;
     background-color: #FFF;
     color: black;
+    float: left;
 }
 
 #merge-buttons{

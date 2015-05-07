@@ -21,7 +21,10 @@
         {% for twitter_image in twitter_images %}
         <div id="item{{ loop.index }}" class="packery-item">
             <img src="{{ twitter_image.url }}">
-            <button class="merge">Merge</button>
+            <div class = "image-buttons">
+                <button class="merge">Merge</button>
+                <button class="hide">Hide</button>
+            </div>
             <div class="image-footer">
                 <div class="share-count">
                     <span class="count">{{ twitter_image.count}}</span> {{ twitter_image.share_text }}

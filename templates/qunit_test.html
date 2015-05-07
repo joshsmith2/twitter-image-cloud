@@ -20,16 +20,13 @@
 
     <div id="container">
         <div id="blackout-curtain"></div>
-        <button id="open-main-menu">Main menu</button>
-        <div id="main-menu" class="hidden">
-            <button class="close">X</button>
-            <button id="drop-curtain">Drop curtain</button>
-        </div>
-
-    {% for twitter_image in twitter_images %}
+        {% for twitter_image in twitter_images %}
         <div id="item{{ loop.index }}" class="packery-item">
             <img src="{{ twitter_image.url }}">
-            <button class="merge hidden">Merge</button>
+            <div class = "image-buttons hidden">
+                <button class="merge">Merge</button>
+                <button class="hide">Hide</button>
+            </div>
             <div class="image-footer">
                 <div class="share-count">
                     <span class="count">{{ twitter_image.count}}</span> {{ twitter_image.share_text }}
@@ -41,6 +38,11 @@
         <div id="merge-buttons" class="hidden">
             <button id="cancel-merge">Cancel merge</button>
             <button id="complete-merge">Merge</button>
+        </div>
+        <button id="open-main-menu">Main menu</button>
+        <div id="main-menu" class="hidden">
+            <button class="close">X</button>
+            <button id="drop-curtain">Drop curtain</button>
         </div>
     </div>
 
@@ -124,6 +126,24 @@
             assert.notOk($(main_menu).is(":visible"));
         }));
 
+        $(test("Hiding things", function(assert){
+            var image_container = $('#image2');
+            var image = $(image_container).find('img').get(0);
+            var hide_image = $(image_container).find('button.hide');
+            var unhide_all = $('button#unhide-all-images');
+
+            // Show and hide
+            assert.ok($(image).is(":visible"));
+            $(hide_image).click();
+            assert.notOk($(image).is(":visible"));
+            $(hide_image).click();
+            assert.ok($(image).is(":visible"));
+
+            // Hide again, unhide all
+            $(hide_image).click();
+            $(unhide_all).click();
+            assert.ok($(image).is(":visible"));
+        }));
 
     </script>
 </body>
