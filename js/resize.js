@@ -80,6 +80,7 @@ $(function() {
                 $(this).removeClass('expanded');
             }else{
                 $(this).addClass('expanded');
+                $(this).find('button.merge').removeClass('hidden')
             }
         });
     };
@@ -150,8 +151,10 @@ $(function() {
     var bind_merge_mode_mouse_actions = function(){
         var packery_item = $('.packery-item');
         $(packery_item).mouseover(function(){
-            var merge_button = $(this).find('button.merge').get(0);
-            $(merge_button).removeClass('hidden');
+            if ($(this).hasClass('expanded')){
+                var merge_button = $(this).find('button.merge').get(0);
+                $(merge_button).removeClass('hidden');
+            }
             if (window.mode == 'merge'){
                 $(this).addClass('merge-candidate');
             }

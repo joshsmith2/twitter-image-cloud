@@ -5,3 +5,4 @@ index.html
 ._*
 .DS_Store
 *.db*
+*.min.js
