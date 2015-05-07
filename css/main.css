@@ -4,6 +4,10 @@ body{
     font-weight: 100;
 }
 
+button{
+    margin-bottom: 2px;
+}
+
 img{
     width: 100%;
 }
