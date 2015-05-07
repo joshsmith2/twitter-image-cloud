@@ -109,10 +109,6 @@ $(function() {
         }
     };
 
-    merge_images = function() {
-        return true;
-    };
-
     var bind_mode_change_to_merge_buttons = function(packery_instance){
         $('button.merge').click(function(){
             if (window.mode != 'merge') {
@@ -151,16 +147,21 @@ $(function() {
         });
     };
 
-    bind_merge_mode_mouse_actions = function(){
-        $('.packery-item').mouseover(function(){
+    var bind_merge_mode_mouse_actions = function(){
+        var packery_item = $('.packery-item');
+        $(packery_item).mouseover(function(){
+            var merge_button = $(this).find('button.merge').get(0);
+            $(merge_button).removeClass('hidden');
             if (window.mode == 'merge'){
                 $(this).addClass('merge-candidate');
             }
         });
-        $('.packery-item').mouseleave(function(){
+        $(packery_item).mouseleave(function(){
             $(this).removeClass('merge-candidate');
+            var merge_button = $(this).find('button.merge').get(0);
+            $(merge_button).addClass('hidden');
         });
-        $('.packery-item').click(function(event){
+        $(packery_item).click(function(event){
             if (window.mode == 'merge') {
                 if ($(this).hasClass('merge-selected')) {
                     $(this).removeClass('merge-selected');
@@ -175,7 +176,7 @@ $(function() {
     };
 
     // MAIN MENU
-    bind_main_menu_actions = function(){
+    var bind_main_menu_actions = function(){
         var main_menu_button = $('#open-main-menu');
         var main_menu = $('#main-menu');
         $(main_menu_button).click(function(){
@@ -185,6 +186,15 @@ $(function() {
         $(main_menu).find('.close').first().click(function(){
             $(main_menu).addClass('hidden');
             $(main_menu_button).removeClass('hidden');
+        });
+        $(main_menu).children('button').click(function(){
+            $(this).toggleClass('selected');
+        });
+    };
+
+    var bind_blackout_curtain = function(){
+        $('#drop-curtain').click(function(){
+            $('#blackout-curtain').toggleClass('dropped');
         });
     };
 
@@ -202,6 +212,7 @@ $(function() {
 
     bind_merge_mode_mouse_actions();
     bind_main_menu_actions();
+    bind_blackout_curtain();
 });
 
 $(document).ready(function(){

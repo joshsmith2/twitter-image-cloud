@@ -18,6 +18,7 @@
     <div id="qunit-fixture"></div>
 
     <div id="container">
+        <div id="blackout-curtain"></div>
         <button id="open-main-menu">Main menu</button>
         <div id="main-menu" class="hidden">
             <button class="close">X</button>
@@ -27,7 +28,7 @@
     {% for twitter_image in twitter_images %}
         <div id="item{{ loop.index }}" class="packery-item">
             <img src="{{ twitter_image.url }}">
-            <button class="merge">Merge</button>
+            <button class="merge hidden">Merge</button>
             <div class="image-footer">
                 <div class="share-count">
                     <span class="count">{{ twitter_image.count}}</span> {{ twitter_image.share_text }}

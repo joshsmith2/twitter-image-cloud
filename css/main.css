@@ -12,6 +12,17 @@ img{
     display: none;
 }
 
+#blackout-curtain{
+    width: 100%;
+    padding-bottom: 10000px;
+    background-color: #000;
+    position: relative;
+}
+
+#blackout-curtain.dropped{
+    z-index: 50;
+}
+
 .pin{
     width: 15px;
     height: 15px;
@@ -79,16 +90,11 @@ button.merge{
     position: absolute;
     top: 10px;
     left: 10px;
-    display: none;
     font-family: 'Lato', sans-serif;
     font-weight: 300;
     padding: 3px 18px;
     border: 1px solid #3b3b3b;
     background-color: #FFF;
-}
-
-.expanded button.merge{
-    display: block;
     color: black;
 }
 
@@ -135,6 +141,11 @@ button{
 #main-menu button{
     background-color: #B6B6B6;
     color: #000;
+}
+
+#main-menu button.selected{
+    background-color: #000;
+    color: #FFF;
 }
 
 #main-menu button.close{

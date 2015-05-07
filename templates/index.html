@@ -16,6 +16,7 @@
 </head>
 <body>
     <div id="container">
+        <div id="blackout-curtain"></div>
         {% for twitter_image in twitter_images %}
         <div id="item{{ loop.index }}" class="packery-item">
             <img src="{{ twitter_image.url }}">
