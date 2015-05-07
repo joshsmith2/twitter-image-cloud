@@ -43,6 +43,7 @@
         <div id="main-menu" class="hidden">
             <button class="close">X</button>
             <button id="drop-curtain">Drop curtain</button>
+            <button id="unhide-all-images">Unhide selected images</button>
         </div>
     </div>
 
@@ -127,7 +128,7 @@
         }));
 
         $(test("Hiding things", function(assert){
-            var image_container = $('#image2');
+            var image_container = $('#item2');
             var image = $(image_container).find('img').get(0);
             var hide_image = $(image_container).find('button.hide');
             var unhide_all = $('button#unhide-all-images');
@@ -143,6 +144,8 @@
             $(hide_image).click();
             $(unhide_all).click();
             assert.ok($(image).is(":visible"));
+            $(unhide_all).click();
+            assert.notOk($(image).is(':visible'));
         }));
 
     </script>

@@ -21,7 +21,7 @@
         {% for twitter_image in twitter_images %}
         <div id="item{{ loop.index }}" class="packery-item">
             <img src="{{ twitter_image.url }}">
-            <div class = "image-buttons">
+            <div class = "image-buttons hidden">
                 <button class="merge">Merge</button>
                 <button class="hide">Hide</button>
             </div>
@@ -41,6 +41,7 @@
         <div id="main-menu" class="hidden">
             <button class="close">X</button>
             <button id="drop-curtain">Drop curtain</button>
+            <button id="unhide-all-images">Unhide selected images</button>
         </div>
     </div>
 </body>

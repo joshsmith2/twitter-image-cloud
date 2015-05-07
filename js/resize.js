@@ -176,6 +176,18 @@ $(function() {
         });
     };
 
+    var bind_hide_button_mouse_events = function(){
+        var unhide_button = $('#unhide-all-images');
+        $('button.hide').click(function(){
+            image = $(this).parent().siblings('img');
+            $(image).toggleClass('hidden');
+            $(image).toggleClass('selected-for-hiding');
+        });
+        $(unhide_button).click(function(){
+            $('.selected-for-hiding').toggleClass('hidden');
+        });
+    };
+
     // MAIN MENU
     var bind_main_menu_actions = function(){
         var main_menu_button = $('#open-main-menu');
@@ -214,6 +226,7 @@ $(function() {
     bind_merge_mode_mouse_actions();
     bind_main_menu_actions();
     bind_blackout_curtain();
+    bind_hide_button_mouse_events();
 });
 
 $(document).ready(function(){
