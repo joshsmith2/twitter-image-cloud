@@ -1,0 +1,9 @@
+[submodule "js/imagesloaded"]
+	path = js/imagesloaded
+	url = https://github.com/desandro/imagesloaded.git
+[submodule "js/packery"]
+	path = js/packery
+	url = https://github.com/metafizzy/packery.git
+[submodule "js/draggabilly"]
+	path = js/draggabilly
+	url = https://github.com/desandro/draggabilly.git

@@ -4,5 +4,6 @@
 index.html
 ._*
 .DS_Store
-*.db*
+*db
 *.min.js
+Image*

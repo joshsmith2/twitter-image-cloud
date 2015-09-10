@@ -70,7 +70,7 @@ class ImageCloud:
             except StopIteration as e:
                 self.end_of_csv_file_found = True
         urls = [image[self.url_column_name] for image in image_chunk]
-        debraced_urls = [remove_matching_braces(u) for u in urls]
+        debraced_urls = [remove_matching_braces(u) for u in urls if u != '']
         counts = get_url_counts(debraced_urls)
         return counts
 
@@ -172,20 +172,21 @@ def get_url_counts(from_list):
     for l in from_list:
         image_urls = l.split(', ')
         for image_url in image_urls:
-            # Check for an existing result for this url
-            url_already_found = False
-            for result in results:
-                if result['url'] == image_url:
-                    current_count = result['count']
-                    result['count'] = current_count + 1
-                    result['share_text'] = "shares"
-                    url_already_found = True
-            if not url_already_found:
-                new_url = {}
-                new_url['url'] = image_url
-                new_url['count'] = 1
-                new_url['share_text'] = "share"
-                results.append(new_url)
+            if image_url != '':
+                # Check for an existing result for this url
+                url_already_found = False
+                for result in results:
+                    if result['url'] == image_url:
+                        current_count = result['count']
+                        result['count'] = current_count + 1
+                        result['share_text'] = "shares"
+                        url_already_found = True
+                if not url_already_found:
+                    new_url = {}
+                    new_url['url'] = image_url
+                    new_url['count'] = 1
+                    new_url['share_text'] = "share"
+                    results.append(new_url)
     return results
 
 def combine_urls(url_lists):
